@@ -1,7 +1,7 @@
 # 시나리오 분석 보고서
 
 ## Flow Chart
-
+![docs/images/플로우차트.png](docs/images/플로우차트.png)
 
 ## Sequence Diagram
 
