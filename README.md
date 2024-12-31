@@ -1,3 +1,7 @@
+# 콘서트 예약 서비스
+
+## [요구사항 분석 보고서](https://github.com/giwonn/hhplus-concert/wiki/1.-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD-%EB%B6%84%EC%84%9D)
+
 ## 프로젝트
 
 ## Getting Started
