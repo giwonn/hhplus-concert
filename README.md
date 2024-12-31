@@ -1,3 +1,21 @@
+# 시나리오 분석 보고서
+
+## Flow Chart
+
+
+## Sequence Diagram
+
+
+## ERD
+
+
+## API 명세서
+
+
+## Mock API
+
+
+
 ## 프로젝트
 
 ## Getting Started
