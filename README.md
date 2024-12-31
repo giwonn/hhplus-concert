@@ -9,7 +9,7 @@
 ## ERD
 
 
-## API 명세서
+## [API 명세서](https://allens-personal-organization.gitbook.io/hhplus)
 
 
 ## Mock API
