@@ -29,3 +29,14 @@ spring:
     url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
     username: application
     password: application
+
+---
+spring.config.activate.on-profile: test
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: validate
+  sql:
+    init:
+      mode: always
