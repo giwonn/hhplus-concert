@@ -39,3 +39,13 @@ Content-Type: application/json
   "userId": 1,
   "amount": 10000
 }
+
+
+### POST 결제
+POST http://localhost:8080/reservation/payments
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "reservation": 1
+}
