@@ -25,3 +25,7 @@ Content-Type: application/json
   "seatId": 1,
   "date": "2024-01-01"
 }
+
+
+### GET 잔액 조회
+GET http://localhost:8080/users/1/points
