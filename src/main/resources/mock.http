@@ -1,0 +1,8 @@
+### POST 토큰 발급
+POST http://localhost:8080/tokens/concerts
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "concertId": 1
+}
