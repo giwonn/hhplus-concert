@@ -10,3 +10,7 @@ Content-Type: application/json
 
 ### GET 예약 가능 날짜 조회
 GET http://localhost:8080/concerts/1/available-dates
+
+
+### GET 예약 가능 좌석 조회
+GET http://localhost:8080/concerts/1/schedules/1/available-seats?date=2024-01-01

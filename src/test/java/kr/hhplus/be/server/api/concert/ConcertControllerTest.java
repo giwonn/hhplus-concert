@@ -35,4 +35,18 @@ class ConcertControllerTest {
 		}
 	}
 
+
+	@Nested
+	class 예매_가능_좌석_조회 {
+
+		@Test
+		void 성공() throws Exception {
+			mockMvc.perform(get("/concerts/{concertId}/schedules/{concertScheduleId}/available-seats", 1, 1)
+							.queryParam("date", "2024-01-01")
+							.accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$.seats").isArray())
+					.andExpect(jsonPath("$.seats").isNotEmpty());
+		}
+	}
 }
