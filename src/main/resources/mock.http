@@ -29,3 +29,13 @@ Content-Type: application/json
 
 ### GET 잔액 조회
 GET http://localhost:8080/users/1/points
+
+
+### POST 잔액 충전
+POST http://localhost:8080/users/points/charge
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "amount": 10000
+}

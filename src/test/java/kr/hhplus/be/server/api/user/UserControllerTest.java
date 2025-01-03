@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -28,6 +30,22 @@ public class UserControllerTest {
 		@Test
 		void 성공() throws Exception {
 			mockMvc.perform(get("/users/{userId}/points", 1)
+							.accept(MediaType.APPLICATION_JSON))
+					.andExpect(status().isOk())
+					.andExpect(jsonPath("$.userId").value(1))
+					.andExpect(jsonPath("$.point").value(10000));
+		}
+	}
+
+	@Nested
+	class 포인트_충전 {
+
+		@Test
+		void 성공() throws Exception {
+			UserPointRequest request = new UserPointRequest(1, 10000);
+			mockMvc.perform(post("/users/points/charge")
+							.content(objectMapper.writeValueAsString(request))
+							.contentType(MediaType.APPLICATION_JSON)
 							.accept(MediaType.APPLICATION_JSON))
 					.andExpect(status().isOk())
 					.andExpect(jsonPath("$.userId").value(1))
