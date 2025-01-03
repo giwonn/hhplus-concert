@@ -1,0 +1,51 @@
+### POST 토큰 발급
+POST http://localhost:8080/tokens/concerts
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "concertId": 1
+}
+
+
+### GET 예약 가능 날짜 조회
+GET http://localhost:8080/concerts/1/available-dates
+
+
+### GET 예약 가능 좌석 조회
+GET http://localhost:8080/concerts/1/schedules/1/available-seats?date=2024-01-01
+
+
+### POST 좌석 예약 요청
+POST http://localhost:8080/concerts/reservation
+Content-Type: application/json
+
+{
+  "concertId": 1,
+  "seatId": 1,
+  "date": "2024-01-01"
+}
+
+
+### GET 잔액 조회
+GET http://localhost:8080/users/1/points
+
+
+### POST 잔액 충전
+POST http://localhost:8080/users/points/charge
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "amount": 10000
+}
+
+
+### POST 결제
+POST http://localhost:8080/reservation/payments
+Content-Type: application/json
+
+{
+  "userId": 1,
+  "reservation": 1
+}
