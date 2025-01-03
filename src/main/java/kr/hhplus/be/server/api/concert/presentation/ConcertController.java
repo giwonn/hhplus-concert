@@ -1,10 +1,17 @@
 package kr.hhplus.be.server.api.concert.presentation;
+
+import jakarta.validation.Valid;
 import kr.hhplus.be.server.api.concert.presentation.dto.AvailableConcertSchedulesResponse;
 import kr.hhplus.be.server.api.concert.presentation.dto.AvailableConcertSeatsResponse;
 import kr.hhplus.be.server.api.concert.application.dto.ConcertSeatDto;
+import kr.hhplus.be.server.api.concert.presentation.dto.ConcertReservationRequest;
+import kr.hhplus.be.server.api.concert.presentation.dto.ConcertReservationResponse;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -37,4 +44,15 @@ public class ConcertController {
 		);
 		return ResponseEntity.ok(response);
 	}
+
+	@PostMapping(path = "/reservation")
+	public ResponseEntity<ConcertReservationResponse> reservation(@Valid @RequestBody ConcertReservationRequest request) {
+		ConcertReservationResponse response = new ConcertReservationResponse(
+				1,
+				Instant.now().plus(5, ChronoUnit.MINUTES)
+		);
+		return ResponseEntity.ok(response);
+	}
+
+
 }
