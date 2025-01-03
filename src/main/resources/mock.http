@@ -6,3 +6,7 @@ Content-Type: application/json
   "userId": 1,
   "concertId": 1
 }
+
+
+### GET 예약 가능 날짜 조회
+GET http://localhost:8080/concerts/1/available-dates
