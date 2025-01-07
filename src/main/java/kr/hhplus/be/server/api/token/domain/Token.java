@@ -16,11 +16,9 @@ public class Token {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
-	private long concertId;
-
 	private long userId;
 
-	private boolean isActivated;
+	private boolean isQueuePassed;
 
 	private Instant expiredAt;
 

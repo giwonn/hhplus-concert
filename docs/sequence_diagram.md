@@ -2,11 +2,13 @@
 ```mermaid
 sequenceDiagram
   actor A1 as 유저
-  participant Token as Token
+    participant Token as Token
+    participant Store as Store (저장소)
 
   A1 ->>+ Token: 대기열 토큰 발급 요청
-  Token ->> Token: 만료시간 10분인 토큰 발급
-  Token ->> Token: 토큰 저장
+  Token ->> Token: 만료시간(5분)을 가진 토큰 생성
+  Token ->> Store: 토큰 저장
+  Store -->> Token: 
   Token -->>- A1: 토큰 return
 ```
 
@@ -17,21 +19,27 @@ sequenceDiagram
 sequenceDiagram
   actor A1 as 유저
   participant Token as Token
-    participant Request as 요청한 서비스
+  participant Store as Store (저장소)
+  participant Request as 요청한 서비스
+  
 
   A1 ->>+ Token: API 서비스 요청
-  Token ->> Token: 토큰ID, 유저ID로 토큰 조회
-  opt 유효하지 않은 토큰이면
-    Token -->> A1: InvalidTokenException 예외 발생
-  end
-  Token ->> Token: 토큰 만료시간 체크
-  opt 토큰이 만료되었다면
-    Token -->> A1: TokenExpiredException 예외 발생
-  end
-  alt 대기열 대기중인 토큰이면
-      Token ->> Token: 토큰 만료시간 갱신 (현재시간 + 10분)
-      Token ->> Token: 갱신한 토큰 저장
-      Token -->>- A1: 갱신한 토큰 return
+    Token ->> Store: 토큰ID로 토큰 조회
+    Store -->> Token: 
+    opt 토큰이 존재하지 않으면
+        Token -->> A1: NotFoundTokenException 예외 발생
+    end
+      Token ->> Token: 토큰 만료시간 체크
+      opt 토큰이 만료되었다면
+        Token -->> A1: TokenExpiredException 예외 발생
+      end
+      alt 대기열 대기중인 토큰이면
+          alt 토큰 만료시간이 1분 미만이면
+            Token ->> Token: 토큰의 만료시간을 10분으로 갱신
+            Token ->> Store: 토큰 업데이트
+            Store -->> Token: 
+          end
+          Token -->>- A1: `X-Waiting-Token`으로 Cookie에 담아 토큰 return
       
       else 대기열 통과한 토큰이면
       Token ->>+ Request: API 요청 전달
@@ -47,11 +55,18 @@ sequenceDiagram
 sequenceDiagram
     participant Scheduler as Scheduler
     participant Token as Token
+    participant Store as Store (저장소)
 
-    loop 5초마다
+    loop 10초마다
         Scheduler ->>+ Token: 토큰 활성화 요청
-        Token ->> Token: 콘서트별 대기중인 토큰 1000개 조회
-        Token ->> Token: 조회된 토큰 활성화 후 반영
+        critical transaction
+        Token ->> Store: 콘서트별 가장 오래된 토큰 500개 조회
+        Store -->> Token: 
+        Token ->> Token: 토큰의 대기열 통과 여부 true로 변경
+            Token ->> Token: 토큰 만료시간 10분으로 갱신
+            Token ->>+ Store: 토큰 저장
+            Store -->> Token: 
+        end
         Token -->>- Scheduler: SUCCESS
     end
 ```
@@ -67,8 +82,8 @@ sequenceDiagram
 
     loop 10분마다
         Scheduler ->>+ Token: 만료된 토큰 삭제 요청
-        Token ->>+ Store: 만료시간이 지난 토큰 일괄 삭제
-        Store -->>- Token: 삭제 완료
+        Token ->> Store: 만료시간이 지난 토큰 일괄 삭제
+        Store -->> Token: 
         Token -->>- Scheduler: SUCCESS
     end
 ```
@@ -84,7 +99,7 @@ sequenceDiagram
     loop 1분마다
         Scheduler ->>+ Reservation: 만료된 예약에 대한 좌석 배정 해제 요청
         critical Transaction
-            Reservation ->> Reservation: `WAITING` 상태로 만료된 예약의 상태를 `EXPIRED`로 변경
+            Reservation ->> Reservation: 만료된 `WAITING` 상태의 예약을 `EXPIRED`로 변경
             Reservation ->>+ ConcertSeat: 만료된 예약들에 대한 좌석 배정 해제
             ConcertSeat ->> ConcertSeat: 좌석 배정 해제
         end
@@ -92,7 +107,6 @@ sequenceDiagram
         Reservation -->>- Scheduler: SUCCESS
     end
 ```
-
 
 
 ## 예약 가능 날짜 조회
@@ -165,9 +179,6 @@ sequenceDiagram
     ConcertSeat -->>- Reservation: 임시 배정된 좌석 정보 return
     Reservation ->> Reservation: 예약 내역 추가
 
-    Reservation ->>+ Token: 토큰 내역 return
-    Token -->>- Reservation: 예약 내역 return
-
   Reservation -->>- A1: 예약 정보 return
 ```
 
@@ -195,8 +206,8 @@ sequenceDiagram
   A1 ->>+ User: 잔액 충전 요청
   critical Transaction
      User ->> User: 잔액 조회 및 충전
-     User ->>+ UserPointHistory: 충전 이력 추가
-     UserPointHistory -->>- User: 추가 완료
+     User ->> UserPointHistory: 충전 이력 추가
+     UserPointHistory -->> User: 
   end
    User -->>- A1: 잔액 정보 return
 ```
@@ -230,8 +241,8 @@ sequenceDiagram
           User-->> A1: NotEnoughBalanceException 예외 발생
         end
         User ->> User: 잔액 차감
-        User ->>+ UserPointHistory: 잔액 차감 내역 추가
-        UserPointHistory -->>- User: 내역 추가 완료
+        User ->> UserPointHistory: 잔액 차감 내역 추가
+        UserPointHistory -->> User: 
         User -->>- Reservation: 잔액 차감 return
         
         note over Reservation: 2. 결제 시간 기록
@@ -243,8 +254,8 @@ sequenceDiagram
     end
     
     note over Reservation: 3. 대기열 토큰 만료
-    Reservation ->>+ Token: 대기열 토큰 만료
-    Token -->>- Reservation: 만료 처리 성공
+    Reservation ->> Token: 대기열 토큰 만료
+    Token -->> Reservation: 
     Reservation -->>- A1: 결제 내역 return
 ```
 
