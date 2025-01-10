@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.reservation.domain;
+package kr.hhplus.be.server.api.reservation.domain.entity;
 
 public enum ReservationStatus {
 	WAITING,
