@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.concert.presentation.dto;
+package kr.hhplus.be.server.api.concert.presentation.port.out;
 
 import java.util.List;
 

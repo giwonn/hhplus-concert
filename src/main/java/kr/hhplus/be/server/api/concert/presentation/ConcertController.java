@@ -1,32 +1,36 @@
 package kr.hhplus.be.server.api.concert.presentation;
 
-import jakarta.validation.Valid;
-import kr.hhplus.be.server.api.concert.presentation.dto.AvailableConcertSchedulesResponse;
-import kr.hhplus.be.server.api.concert.presentation.dto.AvailableConcertSeatsResponse;
-import kr.hhplus.be.server.api.concert.application.dto.ConcertSeatDto;
-import kr.hhplus.be.server.api.concert.presentation.dto.ConcertReservationRequest;
-import kr.hhplus.be.server.api.concert.presentation.dto.ConcertReservationResponse;
+import kr.hhplus.be.server.api.concert.application.ConcertService;
+import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResult;
+import kr.hhplus.be.server.api.concert.presentation.port.out.AvailableConcertSchedulesResponse;
+import kr.hhplus.be.server.api.concert.presentation.port.out.AvailableConcertSeatsResponse;
+import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequestMapping("/concerts")
-public class ConcertController {
+@RequiredArgsConstructor
+public class ConcertController implements ConcertControllerDocs {
+
+	private final ConcertService concertService;
 
 	@GetMapping(path = "/{concertId}/available-dates")
 	public ResponseEntity<AvailableConcertSchedulesResponse> availableDates(
 			@PathVariable("concertId") long concertId
 	) {
+		List<ConcertScheduleResult> result = concertService.getReservableSchedules(concertId);
+
 		AvailableConcertSchedulesResponse response = new AvailableConcertSchedulesResponse(
-				1,
-				List.of("2025-01-01", "2025-01-02", "2025-01-03", "2025-01-04")
+				result.get(0).concertId(),
+				result.stream().map(schedule -> schedule.concertDate().toString()).toList()
 		);
+
 		return ResponseEntity.ok(response);
 	}
 
@@ -36,23 +40,8 @@ public class ConcertController {
 			@PathVariable("concertScheduleId") long concertScheduleId,
 			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
 	) {
-		AvailableConcertSeatsResponse response = new AvailableConcertSeatsResponse(
-				List.of(
-				new ConcertSeatDto(550, 1, 8000),
-				new ConcertSeatDto(551, 2, 10000)
-				)
-		);
-		return ResponseEntity.ok(response);
+		List<ConcertSeatResult> result = concertService.getReservableSeats(concertScheduleId);
+		return ResponseEntity.ok(new AvailableConcertSeatsResponse(result));
 	}
-
-	@PostMapping(path = "/reservation")
-	public ResponseEntity<ConcertReservationResponse> reservation(@Valid @RequestBody ConcertReservationRequest request) {
-		ConcertReservationResponse response = new ConcertReservationResponse(
-				1,
-				Instant.now().plus(5, ChronoUnit.MINUTES)
-		);
-		return ResponseEntity.ok(response);
-	}
-
 
 }
