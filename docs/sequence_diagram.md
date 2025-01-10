@@ -34,8 +34,8 @@ sequenceDiagram
         Token -->> A1: TokenExpiredException 예외 발생
       end
       alt 대기열 대기중인 토큰이면
-          alt 토큰 만료시간이 1분 미만이면
-            Token ->> Token: 토큰의 만료시간을 10분으로 갱신
+          alt 토큰 만료시간이 10초 미만이면
+            Token ->> Token: 토큰의 만료시간을 3분으로 갱신
             Token ->> Store: 토큰 업데이트
             Store -->> Token: 
           end
@@ -60,7 +60,7 @@ sequenceDiagram
     loop 10초마다
         Scheduler ->>+ Token: 토큰 활성화 요청
         critical transaction
-        Token ->> Store: 콘서트별 가장 오래된 토큰 500개 조회
+        Token ->> Store: 만료되지 않은 토큰중 먼저 발급된 500개 조회
         Store -->> Token: 
         Token ->> Token: 토큰의 대기열 통과 여부 true로 변경
             Token ->> Token: 토큰 만료시간 10분으로 갱신
@@ -80,9 +80,9 @@ sequenceDiagram
     participant Token as Token
     participant Store as Store (저장소)
 
-    loop 10분마다
+    loop 1분마다
         Scheduler ->>+ Token: 만료된 토큰 삭제 요청
-        Token ->> Store: 만료시간이 지난 토큰 일괄 삭제
+        Token ->> Store: 만료시간이 지난 토큰 1000개 삭제
         Store -->> Token: 
         Token -->>- Scheduler: SUCCESS
     end
@@ -145,7 +145,7 @@ sequenceDiagram
     Token -->>- A1: TokenExpiredException 예외 발생
   end
   Token ->>+ ConcertSeat: 유저 요청 전달
-  ConcertSeat ->> ConcertSeat: 해당 일자 기준 예약되지 않았거나 배정 만료된 좌석 조회
+  ConcertSeat ->> ConcertSeat: 예약 가능한 좌석 조회
   ConcertSeat -->>- A1: 예약 가능 좌석 리스트 return
 ```
 
@@ -234,7 +234,10 @@ sequenceDiagram
     Token ->>+ Reservation: 요청 전달
     
     critical Transaction
-        note over Reservation: 1. 잔액 차감
+        note over Reservation: 1. 예약 조회
+            Reservation ->> Reservation: 예약 정보 조회
+            
+        note over Reservation: 2. 잔액 차감
         Reservation ->>+ User: 잔액 차감
         User ->> User: 잔액 조회
         opt 결제금액보다 잔액이 적은 경우
@@ -244,16 +247,16 @@ sequenceDiagram
         User ->> UserPointHistory: 잔액 차감 내역 추가
         UserPointHistory -->> User: 
         User -->>- Reservation: 잔액 차감 return
-        
-        note over Reservation: 2. 결제 시간 기록
-        Reservation ->> Reservation: 결제 만료 시간 체크
-        opt 결제 만료시간 초과시
-          Reservation -->> A1: ExpiredReservationException 예외 발생
+
+        note over Reservation: 3. 예약 결제 시간 기록
+        Reservation ->> Reservation: 예약 만료 시간 체크
+        opt 예약 만료시간 초과시
+        Reservation -->> A1: ExpiredReservationException 예외 발생
         end
-        Reservation ->> Reservation: 결제 시간 기록
+        Reservation ->> Reservation: 예약 결제 시간 기록
     end
     
-    note over Reservation: 3. 대기열 토큰 만료
+    note over Reservation: 4. 대기열 토큰 만료
     Reservation ->> Token: 대기열 토큰 만료
     Token -->> Reservation: 
     Reservation -->>- A1: 결제 내역 return
