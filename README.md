@@ -8,6 +8,7 @@
 ## 설계 자료
 ### [ERD](./docs/erd.md)
 ### [API 명세서](https://allens-personal-organization.gitbook.io/hhplus/step6/api-docs)
+### [API Swagger](./docs/swagger.md)
 
 ## 프로젝트
 
