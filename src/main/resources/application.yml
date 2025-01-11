@@ -30,6 +30,15 @@ spring:
     username: application
     password: application
 
+  sql:
+    init:
+      mode: always
+
+queue:
+  limit:
+    active: 500
+    delete: 1000
+
 ---
 spring.config.activate.on-profile: test
 
@@ -37,6 +46,8 @@ spring:
   jpa:
     hibernate:
       ddl-auto: validate
-  sql:
-    init:
-      mode: always
+
+queue:
+  limit:
+    active: 5
+    delete: 1

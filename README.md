@@ -1,12 +1,14 @@
 # 콘서트 예약 서비스
 
 ## 요구사항 분석 보고서
-### [플로우 차트](https://allens-personal-organization.gitbook.io/hhplus/step5/flow-chart)
-### [시퀀스 다이어그램](https://allens-personal-organization.gitbook.io/hhplus/step5/sequence-diagram)
+### [마일스톤](https://github.com/users/giwonn/projects/5)
+### [플로우 차트](./docs/flow_chart.md)
+### [시퀀스 다이어그램](./docs/sequence_diagram.md)
 
 ## 설계 자료
-### [ERD](https://allens-personal-organization.gitbook.io/hhplus/step6/erd)
+### [ERD](./docs/erd.md)
 ### [API 명세서](https://allens-personal-organization.gitbook.io/hhplus/step6/api-docs)
+### [API Swagger](./docs/swagger.md)
 
 ## 프로젝트
 

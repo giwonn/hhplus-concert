@@ -1,49 +1,49 @@
 CREATE TABLE IF NOT EXISTS user (
-  id bigint PRIMARY KEY,
-  point bigint
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  point bigint not null
 );
 
 CREATE TABLE IF NOT EXISTS user_point_history (
-  id bigint PRIMARY KEY,
-  user_id bigint,
-  action varchar(30),
-  amount bigint,
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  user_id bigint not null,
+  action varchar(30) not null,
+  amount bigint not null,
   transaction_at timestamp
 );
 
 CREATE TABLE IF NOT EXISTS token (
-  id bigint PRIMARY KEY,
-  concert_id bigint,
-  user_id bigint,
-  is_activated boolean,
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  user_id bigint not null,
+  is_queue_passed boolean not null default false,
   expired_at timestamp
 );
 
 CREATE TABLE IF NOT EXISTS concert (
-  id bigint PRIMARY KEY
+  id bigint PRIMARY KEY AUTO_INCREMENT
 );
 
 CREATE TABLE IF NOT EXISTS concert_schedule (
-  id bigint PRIMARY KEY,
-  concert_id bigint,
-  concert_date date,
-  is_sold_out boolean,
-  INDEX idx_concert_id_date (concert_id, concert_date) -- 복합 인덱스
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  concert_id bigint not null,
+  concert_date date not null,
+  is_sold_out boolean default false,
+  INDEX idx_concert_id (concert_id)
 );
 
 CREATE TABLE IF NOT EXISTS concert_seat (
-  id bigint PRIMARY KEY,
-  concert_schedule_id bigint,
-  amount bigint,
-  is_reserved boolean
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  concert_schedule_id bigint not null,
+  seat_num int not null,
+  amount bigint not null,
+  is_reserved boolean default false
 );
 
 CREATE TABLE IF NOT EXISTS reservation (
-  id bigint PRIMARY KEY,
-  concert_seat_id bigint,
-  user_id bigint,
-  amount bigint,
-  status varchar(30),
-  expired_at timestamp,
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  concert_seat_id bigint not null,
+  user_id bigint not null,
+  amount bigint not null,
+  status varchar(30) not null,
+  created_at timestamp not null,
   paid_at timestamp
 );
