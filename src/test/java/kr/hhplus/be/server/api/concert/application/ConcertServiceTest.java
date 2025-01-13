@@ -8,6 +8,7 @@ import kr.hhplus.be.server.api.concert.domain.entity.TestConcertScheduleFactory;
 import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
+import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,9 +1,9 @@
 package kr.hhplus.be.server.api.reservation.application;
 
-import kr.hhplus.be.server.api.concert.application.ConcertErrorCode;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
+import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
@@ -12,13 +12,14 @@ import kr.hhplus.be.server.api.reservation.domain.entity.TestReservationFactory;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
-import kr.hhplus.be.server.api.user.application.UserErrorCode;
+import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
 import kr.hhplus.be.server.api.user.domain.entity.TestUserFactory;
 import kr.hhplus.be.server.api.user.domain.entity.User;
 import kr.hhplus.be.server.api.user.domain.entity.UserPointAction;
 import kr.hhplus.be.server.api.user.domain.entity.UserPointHistory;
 import kr.hhplus.be.server.api.user.domain.repository.UserPointHistoryRepository;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
+import kr.hhplus.be.server.api.user.exception.UserErrorCode;
 import kr.hhplus.be.server.base.BaseIntegretionTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
 import kr.hhplus.be.server.common.provider.TimeProvider;

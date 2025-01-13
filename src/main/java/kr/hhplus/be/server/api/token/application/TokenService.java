@@ -5,6 +5,7 @@ import kr.hhplus.be.server.api.token.application.port.in.SignQueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
 import kr.hhplus.be.server.api.token.domain.entity.Token;
 import kr.hhplus.be.server.api.token.domain.repository.TokenRepository;
+import kr.hhplus.be.server.api.token.exception.TokenErrorCode;
 import kr.hhplus.be.server.common.exception.CustomException;
 import kr.hhplus.be.server.common.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;

@@ -3,7 +3,7 @@ package kr.hhplus.be.server.api.token.presentation.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.hhplus.be.server.api.token.application.TokenErrorCode;
+import kr.hhplus.be.server.api.token.exception.TokenErrorCode;
 import kr.hhplus.be.server.api.token.application.TokenService;
 import kr.hhplus.be.server.api.token.application.port.in.ValidateQueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;

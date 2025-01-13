@@ -7,6 +7,7 @@ import kr.hhplus.be.server.api.user.application.port.out.UserPointResult;
 import kr.hhplus.be.server.api.user.domain.entity.TestUserFactory;
 import kr.hhplus.be.server.api.user.domain.entity.User;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
+import kr.hhplus.be.server.api.user.exception.UserErrorCode;
 import kr.hhplus.be.server.base.BaseIntegretionTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
 import org.junit.jupiter.api.Nested;

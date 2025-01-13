@@ -6,6 +6,7 @@ import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
+import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import kr.hhplus.be.server.common.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

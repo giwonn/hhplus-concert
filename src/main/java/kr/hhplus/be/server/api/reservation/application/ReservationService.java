@@ -5,6 +5,7 @@ import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResul
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
+import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
 import kr.hhplus.be.server.common.exception.CustomException;
 import kr.hhplus.be.server.common.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;

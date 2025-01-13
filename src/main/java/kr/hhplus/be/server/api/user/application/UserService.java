@@ -7,6 +7,7 @@ import kr.hhplus.be.server.api.user.domain.entity.User;
 import kr.hhplus.be.server.api.user.domain.entity.UserPointHistory;
 import kr.hhplus.be.server.api.user.domain.repository.UserPointHistoryRepository;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
+import kr.hhplus.be.server.api.user.exception.UserErrorCode;
 import kr.hhplus.be.server.common.exception.CustomException;
 import kr.hhplus.be.server.common.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;
