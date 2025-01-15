@@ -1,13 +1,13 @@
 package kr.hhplus.be.server.api.token.application;
 
-import kr.hhplus.be.server.api.token.application.port.in.ValidateQueueTokenDto;
+import kr.hhplus.be.server.api.token.application.port.in.QueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.in.SignQueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
 import kr.hhplus.be.server.api.token.domain.entity.Token;
 import kr.hhplus.be.server.api.token.domain.repository.TokenRepository;
 import kr.hhplus.be.server.api.token.exception.TokenErrorCode;
-import kr.hhplus.be.server.common.exception.CustomException;
-import kr.hhplus.be.server.common.provider.TimeProvider;
+import kr.hhplus.be.server.exception.CustomException;
+import kr.hhplus.be.server.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,15 +30,12 @@ public class TokenService {
 		return QueueTokenResult.of(token, token.getId());
 	}
 
-	public QueueTokenResult checkQueuePassedAndUpdateToken(ValidateQueueTokenDto dto) {
+	public QueueTokenResult checkQueuePassedAndUpdateToken(QueueTokenDto dto) {
 		Token token = tokenRepository.findById(dto.tokenId())
 				.orElseThrow(() -> new CustomException(TokenErrorCode.NOT_FOUND_QUEUE));
 
 		Instant now = timeProvider.now();
-
-		if (token.getExpiredAt().isBefore(now)) {
-			throw new CustomException(TokenErrorCode.QUEUE_EXPIRED);
-		}
+		if (token.isExpired(now)) throw new CustomException(TokenErrorCode.QUEUE_EXPIRED);
 
 		// 대기열 대기중에 만료시간이 임박한 경우
 		if (!token.isQueuePassed() && token.isExpiringSoon(now)) {
@@ -83,9 +79,7 @@ public class TokenService {
 	}
 
 	@Transactional
-	public void deActivateQueueToken(long tokenId) {
-		Optional<Token> token = tokenRepository.findByUserIdWithLock(tokenId);
-		if (token.isEmpty()) return;
-		tokenRepository.deleteById(tokenId);
+	public void expireQueueToken(QueueTokenDto dto) {
+		tokenRepository.deleteByTokenIdAndUserId(dto.tokenId(), dto.userId());
 	}
 }

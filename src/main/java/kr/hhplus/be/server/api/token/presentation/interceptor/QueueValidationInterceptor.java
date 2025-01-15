@@ -3,17 +3,15 @@ package kr.hhplus.be.server.api.token.presentation.interceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kr.hhplus.be.server.api.token.application.port.in.QueueTokenDto;
 import kr.hhplus.be.server.api.token.exception.TokenErrorCode;
 import kr.hhplus.be.server.api.token.application.TokenService;
-import kr.hhplus.be.server.api.token.application.port.in.ValidateQueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
 import kr.hhplus.be.server.api.token.presentation.port.out.QueueTokenResponse;
-import kr.hhplus.be.server.common.exception.CustomException;
+import kr.hhplus.be.server.exception.CustomException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
 
@@ -26,8 +24,7 @@ public class QueueValidationInterceptor implements HandlerInterceptor {
 
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-		String waitingTokenJson = getTokenFromHeader(request, "X-Waiting-Token");
-		ValidateQueueTokenDto tokenDto = parseToken(waitingTokenJson, ValidateQueueTokenDto.class);
+		QueueTokenDto tokenDto = parseToken(request, "X-Waiting-Token");
 		QueueTokenResult queueToken = tokenService.checkQueuePassedAndUpdateToken(tokenDto);
 
 		// 202 응답으로 토큰 반환
@@ -38,30 +35,19 @@ public class QueueValidationInterceptor implements HandlerInterceptor {
 			return false;
 		}
 
+		request.setAttribute("queueToken", queueToken);
 		// 대기열 통과한 토큰이면 요청을 이어서 수행함
 		return true;
 	}
 
-	@Override
-	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) throws Exception {
-		if (!request.getRequestURI().equals("/reservation/payments")) return;
-
-		String waitingTokenJson = getTokenFromHeader(request, "X-Waiting-Token");
-		ValidateQueueTokenDto tokenDto = parseToken(waitingTokenJson, ValidateQueueTokenDto.class);
-		tokenService.deActivateQueueToken(tokenDto.tokenId());
-	}
-
-	private String getTokenFromHeader(HttpServletRequest request, String tokenName) {
-		String waitingTokenJson = request.getHeader(tokenName);
-		if (waitingTokenJson == null || waitingTokenJson.isEmpty()) {
+	private QueueTokenDto parseToken(HttpServletRequest request, String tokenName) {
+		String jsonWaitingToken = request.getHeader(tokenName);
+		if (jsonWaitingToken == null || jsonWaitingToken.isEmpty()) {
 			throw new CustomException(TokenErrorCode.NOT_FOUND_QUEUE);
 		}
-		return waitingTokenJson;
-	}
 
-	private <T> T parseToken(String token, Class<T> clazz) {
 		try {
-			return objectMapper.readValue(token, clazz);
+			return objectMapper.readValue(jsonWaitingToken, QueueTokenDto.class);
 		} catch (Exception e) {
 			throw new CustomException(TokenErrorCode.INVALID_QUEUE);
 		}

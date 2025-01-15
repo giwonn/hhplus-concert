@@ -18,8 +18,7 @@ public class Token {
 	public static final int ACTIVATE_SECONDS = 60 * 10;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	private long userId;
 
@@ -48,6 +47,10 @@ public class Token {
 
 	public boolean isExpiringSoon(Instant time) {
 		return Duration.between(time, expiredAt).getSeconds() < WAIT_THRESHOLD_SECONDS;
+	}
+
+	public boolean isExpired(Instant time) {
+		return expiredAt.isBefore(time);
 	}
 
 }

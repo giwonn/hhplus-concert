@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.config;
 
 import jakarta.servlet.Filter;
+import kr.hhplus.be.server.api.token.presentation.interceptor.ExpireQueueInterceptor;
 import kr.hhplus.be.server.api.token.presentation.interceptor.QueueValidationInterceptor;
 import kr.hhplus.be.server.filter.ApiLoggingFilter;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,9 @@ public class WebConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(queueValidationInterceptor)
 				.addPathPatterns("/concerts/**", "/reservations/payments");
+
+		registry.addInterceptor(expireQueueInterceptor)
+				.addPathPatterns("/reservations/payments");
 
 	}
 
