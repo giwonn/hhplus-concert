@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.exception;
+package kr.hhplus.be.server.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.exception;
+package kr.hhplus.be.server.exception;
 
 public record ErrorResponse(
 		String code,

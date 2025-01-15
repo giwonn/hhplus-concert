@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.common.provider;
+package kr.hhplus.be.server.provider;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
