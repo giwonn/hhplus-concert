@@ -42,7 +42,7 @@ public class ReservationService {
 	public ReservationResult reserve(CreateReservationDto dto) {
 		List<Reservation> duplicateReservations = reservationRepository.findByConcertSeatIdAndStatus(dto.concertSeatId(), ReservationStatus.WAITING);
 		if (!duplicateReservations.isEmpty()) {
-			throw new CustomException(ReservationErrorCode.DUPLICATE_SEAT_RESERVATION);
+			throw new CustomException(ReservationErrorCode.ALREADY_SEAT_RESERVATION);
 		}
 		Reservation reservation = Reservation.of(dto.concertSeatId(), dto.userId(), dto.amount(), timeProvider.now());
 		return ReservationResult.from(reservationRepository.save(reservation));

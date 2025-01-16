@@ -125,7 +125,7 @@ public class ReservationServiceTest {
 
 			// when & then
 			assertThatThrownBy(() -> reservationService.reserve(dto))
-					.hasMessage(ReservationErrorCode.DUPLICATE_SEAT_RESERVATION.getReason());
+					.hasMessage(ReservationErrorCode.ALREADY_SEAT_RESERVATION.getReason());
 		}
 	}
 

@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.reservation.application;
+package kr.hhplus.be.server.api.reservation.presentation;
 
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
@@ -6,25 +6,23 @@ import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
-import kr.hhplus.be.server.base.BaseIntegretionTest;
+import kr.hhplus.be.server.base.BaseIntegrationTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
+import kr.hhplus.be.server.util.ConcurrencyTestUtil;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @Import(FixedClockBean.class)
-class ReservationFacadeConcurrencyTest extends BaseIntegretionTest {
+class ReservationFacadeConcurrencyTest extends BaseIntegrationTest {
 
 	@Autowired
 	ReservationFacade reservationFacade;
@@ -39,42 +37,25 @@ class ReservationFacadeConcurrencyTest extends BaseIntegretionTest {
 	class 좌석_동시_예약 {
 
 		@Test
-		void 다섯명중_단_한명만_성공() throws InterruptedException {
+		void 스무명중_단_한명만_성공() throws InterruptedException {
 			// given
 			ConcertSeat concertSeat = TestConcertSeatFactory.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L);
 
-			int tryCount = 10;
-			List<Callable<Void>> tasks = new ArrayList<>();
+			List<Supplier<?>> tasks = new ArrayList<>();
+			int tryCount = 20;
 			for (long i = 1; i <= tryCount; i++) {
-				tasks.add(() -> {
-					reservationFacade.reserve(dto);
-					return null;
-				});
+				final long userId = i;
+				tasks.add(() -> reservationFacade.reserve(new CreateReservationDto(1L, userId, 1000L, Date.valueOf("2024-10-01"))));
 			}
-			ExecutorService executorService = Executors.newFixedThreadPool(tryCount);
 
-			AtomicInteger successCount = new AtomicInteger();
-			AtomicInteger failCount = new AtomicInteger();
-
-			// when
-			List<Future<Void>> futures = executorService.invokeAll(tasks);
-			for (Future<Void> future : futures) {
-				try {
-					future.get();
-					successCount.incrementAndGet();
-				} catch (Exception e) {
-					failCount.incrementAndGet();
-				}
-			}
-			executorService.shutdown();
+			ConcurrencyTestUtil.Result result = ConcurrencyTestUtil.run(tasks);
 
 			// then
 			List<Reservation> list = reservationRepository.findAll();
 			assertThat(list).hasSize(1);
-			assertThat(successCount.get()).isEqualTo(1);
-			assertThat(failCount.get()).isEqualTo(9);
+			assertThat(result.successCount()).isEqualTo(1);
+			assertThat(result.failCount()).isEqualTo(tryCount - 1);
 		}
 
 	}

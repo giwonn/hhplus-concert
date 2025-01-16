@@ -8,7 +8,7 @@ import org.springframework.http.HttpStatus;
 public enum ReservationErrorCode implements ErrorCode {
 
 	NOT_FOUND(HttpStatus.NOT_FOUND, "RESERVATION-01", "예약이 존재하지 않습니다."),
-	DUPLICATE_SEAT_RESERVATION(HttpStatus.NOT_FOUND, "RESERVATION-02", "동일한 좌석의 예약이 존재합니다.");
+	ALREADY_SEAT_RESERVATION(HttpStatus.NOT_FOUND, "RESERVATION-02", "이미 선점된 좌석입니다.");
 
 	private HttpStatus httpStatus;
 	private String code;

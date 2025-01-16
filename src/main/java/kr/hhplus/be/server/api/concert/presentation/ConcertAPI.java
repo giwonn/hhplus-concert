@@ -23,7 +23,7 @@ public interface ConcertAPI {
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200",
-					description = "결제 성공",
+					description = "예약 가능 날짜 조회 성공",
 					content = @Content(
 							mediaType = "application/json",
 							schema = @Schema(implementation = AvailableConcertSchedulesResponse.class)
