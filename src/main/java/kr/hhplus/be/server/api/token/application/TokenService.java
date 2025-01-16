@@ -48,6 +48,7 @@ public class TokenService {
 	}
 
 	@Scheduled(cron = "*/30 * * * * *")
+	@LogExecutionTime
 	@Transactional
 	public void activateQueueToken() {
 		String limit = env.getProperty("queue.limit.active");
@@ -68,6 +69,7 @@ public class TokenService {
 	}
 
 	@Scheduled(cron = "0 */1 * * * *")
+	@LogExecutionTime
 	@Transactional
 	public void deleteExpiredQueueToken() {
 		String limit = env.getProperty("queue.limit.delete");

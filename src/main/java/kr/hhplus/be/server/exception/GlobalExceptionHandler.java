@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -14,11 +15,13 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<ErrorResponse<Void>> handleCustomException(CustomException e) {
+		log.warn("[Exception] Code: {}, Reason: {}", e.getCode(), e.getReason(), e);
 		return ResponseEntity.status(e.getHttpStatus()).body(ErrorResponse.from(e));
 	}
 

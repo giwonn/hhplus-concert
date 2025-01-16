@@ -1,33 +1,20 @@
 package kr.hhplus.be.server.exception;
 
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 
-@Slf4j
+@Getter
 public class CustomException extends RuntimeException {
 
-	private final ErrorCode errorCode;
+	private final HttpStatus httpStatus;
+	private final String code;
+	private final String reason;
 
 	public CustomException(ErrorCode errorCode) {
 		super(errorCode.getReason());
-		this.errorCode = errorCode;
-	}
-
-	public void log() {
-		log.warn("[Exception] Code: {}, Reason: {}", getCode(), getReason(), this);
-	}
-
-	public HttpStatus getHttpStatus() {
-		return errorCode.getHttpStatus();
-	}
-
-	public String getCode() {
-		return errorCode.getCode();
-	}
-
-	public String getReason() {
-		return errorCode.getReason();
+		this.httpStatus = errorCode.getHttpStatus();
+		this.code = errorCode.getCode();
+		this.reason = errorCode.getReason();
 	}
 
 }
