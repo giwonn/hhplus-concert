@@ -11,7 +11,7 @@ public class ConcertSeat {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	private long concertScheduleId;
 
@@ -20,6 +20,9 @@ public class ConcertSeat {
 	private long amount;
 
 	private boolean isReserved;
+
+	@Version
+	private Long version;
 
 	ConcertSeat(long id, long concertScheduleId, int seatNum, long amount, boolean isReserved) {
 		this.id = id;
@@ -38,5 +41,9 @@ public class ConcertSeat {
 
 	public void reserve() {
 		this.isReserved = true;
+	}
+
+	public void unReserve() {
+		this.isReserved = false;
 	}
 }

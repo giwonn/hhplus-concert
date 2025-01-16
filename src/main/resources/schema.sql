@@ -37,7 +37,8 @@ CREATE TABLE IF NOT EXISTS concert_seat (
   concert_schedule_id bigint not null,
   seat_num int not null,
   amount bigint not null,
-  is_reserved boolean default false
+  is_reserved boolean default false,
+  version bigint null
 );
 
 CREATE TABLE IF NOT EXISTS reservation (

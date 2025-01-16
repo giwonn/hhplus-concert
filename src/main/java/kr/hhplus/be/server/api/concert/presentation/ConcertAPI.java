@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.Date;
 
 @Tag(name = "Concert", description = "콘서트 API")
-public interface ConcertControllerDocs {
+public interface ConcertAPI {
 
 	@Operation(summary = "예약 가능 날짜 조회", description = "예약 가능한 콘서트 날짜를 조회합니다.")
 	@ApiResponses(value = {

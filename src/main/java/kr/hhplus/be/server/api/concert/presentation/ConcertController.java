@@ -16,7 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/concerts")
 @RequiredArgsConstructor
-public class ConcertController implements ConcertControllerDocs {
+public class ConcertController implements ConcertAPI {
 
 	private final ConcertService concertService;
 
@@ -25,12 +25,7 @@ public class ConcertController implements ConcertControllerDocs {
 			@PathVariable("concertId") long concertId
 	) {
 		List<ConcertScheduleResult> result = concertService.getReservableSchedules(concertId);
-
-		AvailableConcertSchedulesResponse response = new AvailableConcertSchedulesResponse(
-				result.get(0).concertId(),
-				result.stream().map(schedule -> schedule.concertDate().toString()).toList()
-		);
-
+		AvailableConcertSchedulesResponse response = AvailableConcertSchedulesResponse.from(result);
 		return ResponseEntity.ok(response);
 	}
 
