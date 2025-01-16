@@ -12,9 +12,11 @@ import java.time.Instant;
 @NoArgsConstructor
 public class Reservation {
 
+	public static final long EXPIRE_SECONDS = 5 * 60;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	private long concertSeatId;
 

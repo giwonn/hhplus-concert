@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "Reservation", description = "예약 API")
-public interface ReservationControllerDocs {
+public interface ReservationAPI {
 
 	@Operation(summary = "예약 결제 요청", description = "예약 건에 대하여 결제를 요청합니다.")
 	@ApiResponses(value = {

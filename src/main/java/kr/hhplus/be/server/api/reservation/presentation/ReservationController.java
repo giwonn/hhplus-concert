@@ -1,10 +1,10 @@
 package kr.hhplus.be.server.api.reservation.presentation;
 
 import jakarta.validation.Valid;
-import kr.hhplus.be.server.api.reservation.application.ReservationFacade;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
+import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.presentation.port.in.ConcertReservationRequest;
 import kr.hhplus.be.server.api.concert.presentation.port.out.ReservationConcertResponse;
 import kr.hhplus.be.server.api.reservation.presentation.port.in.ReservationPaymentRequest;
@@ -22,7 +22,7 @@ import java.time.temporal.ChronoUnit;
 @RestController
 @RequestMapping("/reservation")
 @RequiredArgsConstructor
-public class ReservationController implements ReservationControllerDocs {
+public class ReservationController implements ReservationAPI {
 
 	private final ReservationFacade reservationFacade;
 
@@ -36,10 +36,7 @@ public class ReservationController implements ReservationControllerDocs {
 
 	@PostMapping(path = "/concerts")
 	public ResponseEntity<ReservationConcertResponse> reservation(@Valid @RequestBody ConcertReservationRequest request) {
-		ReservationConcertResponse response = new ReservationConcertResponse(
-				1,
-				Instant.now().plus(5, ChronoUnit.MINUTES)
-		);
-		return ResponseEntity.ok(response);
+		ReservationResult result = reservationFacade.reserve(request.toDto());
+		return ResponseEntity.ok(ReservationConcertResponse.from(result));
 	}
 }

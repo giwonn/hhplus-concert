@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.reservation.exception;
 
-import kr.hhplus.be.server.common.exception.ErrorCode;
+import kr.hhplus.be.server.exception.ErrorCode;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
