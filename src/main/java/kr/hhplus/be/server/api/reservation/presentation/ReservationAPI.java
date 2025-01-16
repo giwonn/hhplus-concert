@@ -33,11 +33,16 @@ public interface ReservationAPI {
 	@ApiResponses(value = {
 			@ApiResponse(
 					responseCode = "200",
-					description = "대기열 토큰 반환 성공",
+					description = "예약 성공",
 					content = @Content(
 							mediaType = "application/json",
 							schema = @Schema(implementation = ReservationConcertResponse.class)
 					)
+			),
+			@ApiResponse(
+					responseCode = "400",
+					description = "이미 선점된 좌석입니다.",
+					content = @Content(mediaType = "application/json")
 			)
 	})
 	ResponseEntity<ReservationConcertResponse> reservation(@RequestBody ConcertReservationRequest request);

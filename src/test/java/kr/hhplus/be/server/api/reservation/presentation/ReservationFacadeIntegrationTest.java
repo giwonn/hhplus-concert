@@ -152,7 +152,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
-					.hasMessage(ReservationErrorCode.DUPLICATE_SEAT_RESERVATION.getReason());
+					.hasMessage(ReservationErrorCode.ALREADY_SEAT_RESERVATION.getReason());
 		}
 	}
 
