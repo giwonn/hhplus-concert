@@ -19,7 +19,7 @@ public class Token {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	private long userId;
 
@@ -42,12 +42,16 @@ public class Token {
 		this.expiredAt = expiredAt;
 	}
 
-	public static Token of(long userId, Instant expiredAt) {
-		return new Token(userId, false, expiredAt);
-	}
-
 	public boolean isExpiringSoon(Instant time) {
 		return Duration.between(time, expiredAt).getSeconds() < WAIT_THRESHOLD_SECONDS;
+	}
+
+	public boolean isExpired(Instant time) {
+		return expiredAt.isBefore(time);
+	}
+
+	public long getWaitingNumber(long firstWaitingTokenId) {
+		return Math.max(id - firstWaitingTokenId + 1, 0L);
 	}
 
 }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/tokens")
-public class TokenController implements TokenControllerDocs {
+public class TokenController implements TokenAPI {
 
 	private final TokenService tokenService;
 

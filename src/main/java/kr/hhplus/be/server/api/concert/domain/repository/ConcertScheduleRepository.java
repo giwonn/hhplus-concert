@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface ConcertScheduleRepository extends JpaRepository<ConcertSchedule, Long> {
 
-	List<ConcertSchedule> findByConcertIdAndIsSoldOutFalse(long concertId);
+	List<ConcertSchedule> findByConcertId(long concertId);
 }

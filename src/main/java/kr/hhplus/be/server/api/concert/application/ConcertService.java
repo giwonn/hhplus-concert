@@ -6,7 +6,8 @@ import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
-import kr.hhplus.be.server.common.exception.CustomException;
+import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
+import kr.hhplus.be.server.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,14 +22,14 @@ public class ConcertService {
 	private final ConcertScheduleRepository concertScheduleRepository;
 
 	@Transactional
-	public void updateSeatAvailableByIds(List<Long> concertSeatIds) {
-		concertSeatRepository.updateSeatAvailableByIds(concertSeatIds);
+	public void unReserveSeats(List<Long> concertSeatIds) {
+		concertSeatRepository.updateSeatReservableByIds(concertSeatIds);
 	}
 
 	@Transactional(readOnly = true)
 	public List<ConcertScheduleResult> getReservableSchedules(Long concertId) {
-		List<ConcertSchedule> concertSchedules = concertScheduleRepository.findByConcertIdAndIsSoldOutFalse(concertId);
-		return concertSchedules.stream().map(ConcertScheduleResult::from).toList();
+		List<ConcertSchedule> concertSchedules = concertScheduleRepository.findByConcertId(concertId);
+		return concertSchedules.stream().filter(schedule -> !schedule.isSoldOut()).map(ConcertScheduleResult::from).toList();
 	}
 
 	@Transactional(readOnly = true)
@@ -41,12 +42,25 @@ public class ConcertService {
 
 	@Transactional
 	public ConcertSeatResult reserveSeat(long seatId) {
+		ConcertSeat seat = concertSeatRepository.findById(seatId)
+				.orElseThrow(() -> new CustomException(ConcertErrorCode.NOT_FOUND_SEAT));
+
+		// 좌석 예약이 되어있으면 예외를 던짐
+		if (seat.isReserved()) throw new CustomException(ConcertErrorCode.ALREADY_RESERVED_SEAT);
+
+		// 좌석 예약 발급
+		seat.reserve();
+		ConcertSeat reservedSeat = concertSeatRepository.save(seat);
+
+		return ConcertSeatResult.from(reservedSeat);
+	}
+
+	@Transactional
+	public ConcertSeatResult unReserveSeat(long seatId) {
 		ConcertSeat seat = concertSeatRepository.findByIdWithLock(seatId)
 				.orElseThrow(() -> new CustomException(ConcertErrorCode.NOT_FOUND_SEAT));
 
-		if (seat.isReserved()) throw new CustomException(ConcertErrorCode.ALREADY_RESERVED_SEAT);
-
-		seat.reserve();
+		seat.unReserve();
 
 		return ConcertSeatResult.from(concertSeatRepository.save(seat));
 	}

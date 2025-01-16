@@ -14,7 +14,7 @@ public class ConcertSchedule {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+	private Long id;
 
 	private long concertId;
 
@@ -33,10 +33,6 @@ public class ConcertSchedule {
 		this.concertId = concertId;
 		this.concertDate = concertDate;
 		this.isSoldOut = isSoldOut;
-	}
-
-	public static ConcertSchedule of(long concertId, LocalDate concertDate, boolean isSoldOut) {
-		return new ConcertSchedule(concertId, concertDate, isSoldOut);
 	}
 
 }

@@ -9,4 +9,5 @@ public record UserPointResult(
 	public static UserPointResult from(User user) {
 		return new UserPointResult(user.getId(), user.getPoint());
 	}
+
 }

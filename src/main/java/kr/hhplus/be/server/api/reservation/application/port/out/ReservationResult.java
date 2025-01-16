@@ -11,7 +11,7 @@ public record ReservationResult(
 		long userId,
 		long amount,
 		ReservationStatus status,
-		Instant createdAt,
+		Instant expiredAt,
 		Instant paidAt
 ) {
 	public static ReservationResult from(Reservation entity) {
@@ -21,7 +21,7 @@ public record ReservationResult(
 				entity.getUserId(),
 				entity.getAmount(),
 				entity.getStatus(),
-				entity.getCreatedAt(),
+				entity.getCreatedAt().plusSeconds(Reservation.EXPIRE_SECONDS),
 				entity.getPaidAt()
 		);
 	}
