@@ -1,30 +1,30 @@
 package kr.hhplus.be.server.api.reservation.application;
 
+import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
-import kr.hhplus.be.server.api.reservation.domain.entity.TestReservationFactory;
-import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
-import kr.hhplus.be.server.base.BaseIntegretionTest;
+import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
+import kr.hhplus.be.server.base.BaseIntegrationTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
-import kr.hhplus.be.server.common.provider.TimeProvider;
+import kr.hhplus.be.server.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Date;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Import(FixedClockBean.class)
 @Transactional
-class ReservationServiceIntegretionTest extends BaseIntegretionTest {
+class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
 	ReservationService reservationService;
@@ -41,9 +41,9 @@ class ReservationServiceIntegretionTest extends BaseIntegretionTest {
 		void 만료시간이_이미_지난_예약만_처리된다() {
 			// given
 			final List<Reservation> reservations = List.of(
-					TestReservationFactory.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
-					TestReservationFactory.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
-					TestReservationFactory.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
+					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
+					ReservationFixture.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);
 			reservationRepository.saveAll(reservations);
 
@@ -51,7 +51,7 @@ class ReservationServiceIntegretionTest extends BaseIntegretionTest {
 			List<ReservationResult> sut = reservationService.expireReservations();
 
 			// then
-			List<Reservation> expiredReservations = reservationRepository.findByStatus(ReservationStatus.EXPIRED);
+			List<Reservation> expiredReservations = reservationRepository.findByStatusWithLock(ReservationStatus.EXPIRED);
 			assertAll(() -> {
 				assertThat(expiredReservations).hasSize(1);
 				assertThat(sut).hasSize(1);
@@ -62,11 +62,11 @@ class ReservationServiceIntegretionTest extends BaseIntegretionTest {
 	}
 
 	@Nested
-	class 예약_내역_추가 {
+	class 예약_추가 {
 		@Test
 		void 성공() {
 			// given
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-01-01"));
 
 			// when
 			ReservationResult sut = reservationService.reserve(dto);
@@ -77,59 +77,63 @@ class ReservationServiceIntegretionTest extends BaseIntegretionTest {
 				assertThat(sut.concertSeatId()).isEqualTo(dto.concertSeatId());
 				assertThat(sut.amount()).isEqualTo(dto.amount());
 				assertThat(sut.status()).isEqualTo(ReservationStatus.WAITING);
-				assertThat(sut.createdAt()).isEqualTo(timeProvider.now());
+				assertThat(sut.expiredAt()).isEqualTo(timeProvider.now().plusSeconds(Reservation.EXPIRE_SECONDS));
 			});
 
 		}
 
+	}
+
+	@Nested
+	class 예약_조회 {
 		@Test
-		void 실패_이미_예약된_좌석() {
+		void 성공() {
 			// given
-			Reservation reservation = TestReservationFactory.create(
-					1L,
-					1L,
-					1000L,
-					ReservationStatus.WAITING,
-					timeProvider.now(),
-					null
-			);
+			Reservation reservation = ReservationFixture.create(1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(reservation);
 
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
+			// when
+			ReservationResult sut = reservationService.findById(1L);
 
+			// then
+			assertAll(() -> {
+				assertThat(sut.id()).isEqualTo(reservation.getId());
+				assertThat(sut.userId()).isEqualTo(reservation.getUserId());
+				assertThat(sut.concertSeatId()).isEqualTo(reservation.getConcertSeatId());
+				assertThat(sut.amount()).isEqualTo(reservation.getAmount());
+				assertThat(sut.status()).isEqualTo(ReservationStatus.WAITING);
+				assertThat(sut.expiredAt()).isEqualTo(reservation.getCreatedAt().plusSeconds(Reservation.EXPIRE_SECONDS));
+			});
 
-			// when & then
-			assertThatThrownBy(() -> reservationService.reserve(dto))
-					.hasMessage(ReservationErrorCode.DUPLICATE_SEAT_RESERVATION.getReason());
 		}
 	}
 
 	@Nested
-	class 예약_결제내역_추가 {
+	class 예약_확정 {
 		@Test
 		void 성공() {
 			// given
-			Reservation reservation = TestReservationFactory.create(
+			Reservation reservation = ReservationFixture.create(
 					1L,
 					1L,
 					1000L,
 					ReservationStatus.WAITING,
-					timeProvider.now(),
-					null
+					timeProvider.now().minusSeconds(100),
+					timeProvider.now()
 			);
 			reservationRepository.save(reservation);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
+
+			ConfirmReservationDto dto = new ConfirmReservationDto(1L, timeProvider.now());
 
 			// when
-			ReservationResult sut = reservationService.addPaymentTime(1);
+			ReservationResult sut = reservationService.confirmReservation(dto);
 
 			// then
 			assertAll(() -> {
-				assertThat(sut.userId()).isEqualTo(dto.userId());
+				assertThat(sut.userId()).isEqualTo(1L);
 				assertThat(sut.status()).isEqualTo(ReservationStatus.CONFIRMED);
-				assertThat(sut.paidAt()).isEqualTo(timeProvider.now());
+				assertThat(sut.paidAt()).isEqualTo(reservation.getPaidAt());
 			});
-
 		}
 	}
 

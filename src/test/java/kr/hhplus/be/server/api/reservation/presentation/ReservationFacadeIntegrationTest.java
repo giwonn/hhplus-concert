@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.api.reservation.application;
+package kr.hhplus.be.server.api.reservation.presentation;
 
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
@@ -8,26 +8,27 @@ import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservation
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
-import kr.hhplus.be.server.api.reservation.domain.entity.TestReservationFactory;
+import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
-import kr.hhplus.be.server.api.user.domain.entity.TestUserFactory;
+import kr.hhplus.be.server.api.user.domain.entity.UserFixture;
 import kr.hhplus.be.server.api.user.domain.entity.User;
 import kr.hhplus.be.server.api.user.domain.entity.UserPointAction;
 import kr.hhplus.be.server.api.user.domain.entity.UserPointHistory;
 import kr.hhplus.be.server.api.user.domain.repository.UserPointHistoryRepository;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
-import kr.hhplus.be.server.api.user.exception.UserErrorCode;
-import kr.hhplus.be.server.base.BaseIntegretionTest;
+import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
+import kr.hhplus.be.server.base.BaseIntegrationTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
-import kr.hhplus.be.server.common.provider.TimeProvider;
+import kr.hhplus.be.server.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
+import java.sql.Date;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Import(FixedClockBean.class)
-class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
+class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
 	ReservationFacade reservationFacade;
@@ -63,9 +64,9 @@ class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
 		void 만료시간이_지난_예약은_취소되고_좌석배정은_해제된다() {
 			// when
 			final List<Reservation> tempReservations = List.of(
-					TestReservationFactory.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
-					TestReservationFactory.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
-					TestReservationFactory.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
+					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
+					ReservationFixture.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);
 			reservationRepository.saveAll(tempReservations);
 
@@ -116,7 +117,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
 			// given
 			ConcertSeat concertSeat = TestConcertSeatFactory.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L);
+			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L, Date.valueOf("2024-10-01"));
 
 			// when
 			ReservationResult reservation = reservationFacade.reserve(dto);
@@ -133,7 +134,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
 			// given
 			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 2, 1000L, true);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
@@ -145,9 +146,9 @@ class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
 			// given
 			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 2, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			Reservation testReservation = TestReservationFactory.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
+			Reservation testReservation = ReservationFixture.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
@@ -160,10 +161,10 @@ class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
 		@Test
 		void 성공() {
 			// given
-			Reservation testReservation = TestReservationFactory.create(1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
+			Reservation testReservation = ReservationFixture.create(1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
 
-			User testUser = TestUserFactory.create(1000L);
+			User testUser = UserFixture.create(1000L);
 			userRepository.save(testUser);
 
 			// when
@@ -180,17 +181,17 @@ class ReservationFacadeIntegrationTest extends BaseIntegretionTest {
 			List<UserPointHistory> histoires = userPointHistoryRepository.findByUserId(1L);
 			assertThat(histoires).hasSize(1);
 			assertThat(histoires.get(0).getAction()).isEqualTo(UserPointAction.USE);
-			assertThat(histoires.get(0).getAmount()).isEqualTo(1000L);
+			assertThat(histoires.get(0).getAmount()).isEqualTo(-1000L);
 
 		}
 
 		@Test
 		void 실패_잔액부족() {
 			// given
-			Reservation testReservation = TestReservationFactory.create(1L, 1, 9999L, ReservationStatus.WAITING, timeProvider.now(), null);
+			Reservation testReservation = ReservationFixture.create(1L, 1, 9999L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
 
-			User testUser = TestUserFactory.create(1000L);
+			User testUser = UserFixture.create(1000L);
 			userRepository.save(testUser);
 
 			// when & then
