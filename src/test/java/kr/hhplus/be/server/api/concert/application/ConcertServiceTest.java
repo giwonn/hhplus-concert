@@ -47,7 +47,7 @@ public class ConcertServiceTest {
 					TestConcertScheduleFactory.createMock(3L, 1L, LocalDate.parse("2025-01-03"), false)
 			);
 
-			when(concertScheduleRepository.findByConcertIdAndIsSoldOutFalse(1L)).thenReturn(schedules);
+			when(concertScheduleRepository.findByConcertId(1L)).thenReturn(schedules);
 
 			// when
 			List<ConcertScheduleResult> sut = concertService.getReservableSchedules(1L);
@@ -101,7 +101,7 @@ public class ConcertServiceTest {
 		void 성공() {
 			// given
 			ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, false);
-			when(concertSeatRepository.findByIdWithLock(seat.getId())).thenReturn(Optional.of(seat));
+			when(concertSeatRepository.findById(seat.getId())).thenReturn(Optional.of(seat));
 			when(concertSeatRepository.save(any(ConcertSeat.class))).thenReturn(seat);
 
 			// when
@@ -119,7 +119,7 @@ public class ConcertServiceTest {
 		void 실패_이미예약됨() {
 			// given
 			ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, true);
-			when(concertSeatRepository.findByIdWithLock(seat.getId())).thenReturn(Optional.of(seat));
+			when(concertSeatRepository.findById(seat.getId())).thenReturn(Optional.of(seat));
 
 			// when & then
 			assertThatThrownBy(() -> concertService.reserveSeat(1L)).hasMessage(ConcertErrorCode.ALREADY_RESERVED_SEAT.getReason());
@@ -128,10 +128,41 @@ public class ConcertServiceTest {
 		@Test
 		void 실패_존재하지_않는_좌석() {
 			// given
-			when(concertSeatRepository.findByIdWithLock(1L)).thenReturn(Optional.empty());
+			when(concertSeatRepository.findById(1L)).thenReturn(Optional.empty());
 
 			// when & then
 			assertThatThrownBy(() -> concertService.reserveSeat(1L)).hasMessage(ConcertErrorCode.NOT_FOUND_SEAT.getReason());
+		}
+
+	}
+
+	@Nested
+	class 콘서트_좌석_예약_해제 {
+		@Test
+		void 성공() {
+			// given
+			ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, true);
+			when(concertSeatRepository.findByIdWithLock(seat.getId())).thenReturn(Optional.of(seat));
+			when(concertSeatRepository.save(any(ConcertSeat.class))).thenReturn(seat);
+
+			// when
+			ConcertSeatResult sut = concertService.unReserveSeat(seat.getId());
+
+			// then
+			assertThat(sut.id()).isEqualTo(seat.getId());
+			assertThat(sut.concertScheduleId()).isEqualTo(seat.getConcertScheduleId());
+			assertThat(sut.seatNum()).isEqualTo(seat.getSeatNum());
+			assertThat(sut.isReserved()).isFalse();
+		}
+
+		@Test
+		void 실패_존재하지_않는_좌석() {
+			// given
+			when(concertSeatRepository.findByIdWithLock(1L)).thenReturn(Optional.empty());
+
+			// when & then
+			assertThatThrownBy(() -> concertService.unReserveSeat(1L))
+					.hasMessage(ConcertErrorCode.NOT_FOUND_SEAT.getReason());
 		}
 
 	}

@@ -8,13 +8,10 @@ import kr.hhplus.be.server.api.concert.domain.entity.TestConcertScheduleFactory;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
-import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
-import kr.hhplus.be.server.base.BaseIntegretionTest;
-import org.junit.jupiter.api.BeforeEach;
+import kr.hhplus.be.server.base.BaseIntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -24,7 +21,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class ConcertServiceIntegretionTest extends BaseIntegretionTest {
+class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
 	ConcertService concertService;
@@ -36,9 +33,9 @@ class ConcertServiceIntegretionTest extends BaseIntegretionTest {
 	ConcertSeatRepository concertSeatRepository;
 
 	@Nested
-	class 좌석_배정_해제 {
+	class 좌석_배정_일괄_해제 {
 		@Test
-		void concertSeatId를_받아서_임시_배정을_해제한다() {
+		void concertSeatId_리스트를_받아서_임시_배정을_해제한다() {
 			// when
 			final List<ConcertSeat> concertSeats = List.of(
 					TestConcertSeatFactory.create( 1L, 1, 1000L, false),
@@ -50,7 +47,7 @@ class ConcertServiceIntegretionTest extends BaseIntegretionTest {
 			List<Long> concertSeatIds = List.of(1L, 2L);
 
 			// then
-			concertService.updateSeatAvailableByIds(concertSeatIds);
+			concertService.unReserveSeats(concertSeatIds);
 
 			Optional<ConcertSeat> expiredReservation = concertSeatRepository.findById(2L);
 			System.out.println(expiredReservation.get().isReserved());
@@ -134,6 +131,27 @@ class ConcertServiceIntegretionTest extends BaseIntegretionTest {
 				assertThat(sut.concertScheduleId()).isEqualTo(concertSeat.getConcertScheduleId());
 				assertThat(sut.seatNum()).isEqualTo(concertSeat.getSeatNum());
 				assertThat(sut.isReserved()).isTrue();
+			});
+		}
+	}
+
+	@Nested
+	class 콘서트_좌석_단건_예약_해제 {
+		@Test
+		void 성공() {
+			// given
+			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 1, 1000L, true);
+			concertSeatRepository.save(concertSeat);
+
+			// when
+			ConcertSeatResult sut = concertService.unReserveSeat(concertSeat.getId());
+
+			// then
+			assertAll(() -> {
+				assertThat(sut.id()).isEqualTo(concertSeat.getId());
+				assertThat(sut.concertScheduleId()).isEqualTo(concertSeat.getConcertScheduleId());
+				assertThat(sut.seatNum()).isEqualTo(concertSeat.getSeatNum());
+				assertThat(sut.isReserved()).isFalse();
 			});
 		}
 	}

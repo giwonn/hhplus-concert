@@ -1,6 +1,8 @@
 package kr.hhplus.be.server.base;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.hhplus.be.server.api.token.application.TokenService;
+import kr.hhplus.be.server.api.token.application.port.in.QueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,10 @@ public abstract class BaseControllerTest {
 
 	@MockitoBean
 	protected TokenService tokenService;
+	protected QueueTokenDto tokenDto = new QueueTokenDto(1L, 1L);
+
+	@Autowired
+	protected ObjectMapper objectMapper;
 
 	@BeforeEach
 	void setUp() {
