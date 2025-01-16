@@ -16,10 +16,12 @@ import java.util.Optional;
 @Repository
 public interface TokenRepository extends JpaRepository<Token, Long> {
 
-	Optional<Token> findByIdAndUserId(long id, long userId);
+	@Lock(LockModeType.PESSIMISTIC_WRITE)
+	@Query("SELECT t FROM Token t WHERE t.id = :id AND t.userId = :userId")
+	Optional<Token> findByIdAndUserIdWithLock(long id, long userId);
 
 	// 만료 여부 상관없이 가장 먼저 대기중인 토큰을 찾는 쿼리
-	@Query("SELECT MIN(id) FROM Token WHERE expiredAt >= :now")
+	@Query("SELECT MAX(t.id)+1 FROM Token t WHERE t.isQueuePassed = true")
 	Optional<Long> findOldestWaitingTokenId();
 
 	@Query(value = "SELECT * FROM token WHERE expired_at > :expiredAt ORDER BY id LIMIT :limit", nativeQuery = true)
@@ -34,7 +36,7 @@ public interface TokenRepository extends JpaRepository<Token, Long> {
 	void deleteExpiredTokens(@Param("time") Instant time, @Param("limit") int limit);
 
 	@Modifying(clearAutomatically = true)
-	@Query("DELETE Token WHERE id = :tokenId AND userId = :userId")
-	void deleteByTokenIdAndUserId(@Param("id") Long tokenId, @Param("userId") Long userId);
+	@Query("DELETE Token WHERE id = :id AND userId = :userId")
+	void deleteByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 
 }

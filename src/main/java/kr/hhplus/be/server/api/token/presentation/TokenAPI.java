@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Tag(name = "Token", description = "토큰 API")
-public interface TokenControllerDocs {
+public interface TokenAPI {
 
 	@Operation(summary = "콘서트 좌석 예약 대기열 토큰 발급", description = "콘서트 좌석 예약에 필요한 대기열 토큰을 발급합니다.")
 	@ApiResponses(value = {

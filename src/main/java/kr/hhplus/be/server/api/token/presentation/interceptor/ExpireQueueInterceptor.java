@@ -20,7 +20,7 @@ public class ExpireQueueInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, @Nullable ModelAndView modelAndView) {
 		QueueTokenResult token = (QueueTokenResult) request.getAttribute("queueToken");
-		tokenService.expireQueueToken(new QueueTokenDto(token.id(), token.userId()));
+		tokenService.deleteQueueToken(new QueueTokenDto(token.id(), token.userId()));
 	}
 
 }

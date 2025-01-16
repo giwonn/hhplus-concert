@@ -42,7 +42,7 @@ public class QueueValidationInterceptor implements HandlerInterceptor {
 
 	private QueueTokenDto parseToken(HttpServletRequest request, String tokenName) {
 		String jsonWaitingToken = request.getHeader(tokenName);
-		if (jsonWaitingToken == null || jsonWaitingToken.isEmpty()) {
+		if (jsonWaitingToken == null) {
 			throw new CustomException(TokenErrorCode.NOT_FOUND_QUEUE);
 		}
 
