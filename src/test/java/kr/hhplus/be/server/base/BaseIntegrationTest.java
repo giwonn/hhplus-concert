@@ -8,7 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
 @ActiveProfiles("test")
-public abstract class BaseIntegretionTest {
+public abstract class BaseIntegrationTest {
 
 	@Autowired
 	DatabaseCleaner databaseCleaner;
@@ -16,9 +16,5 @@ public abstract class BaseIntegretionTest {
 	@BeforeEach
 	final void baseSetUp() {
 		databaseCleaner.clear();
-	}
-
-	protected void setUp() {
-		// do nothing
 	}
 }
