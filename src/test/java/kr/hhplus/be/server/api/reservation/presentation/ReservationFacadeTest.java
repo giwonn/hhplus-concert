@@ -13,6 +13,8 @@ import kr.hhplus.be.server.api.user.application.UserService;
 import kr.hhplus.be.server.api.user.application.port.in.UserPointDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
 import kr.hhplus.be.server.common.provider.FixedTimeProvider;
+import kr.hhplus.be.server.provider.CompensationProvider;
+import kr.hhplus.be.server.provider.CompensationProviderFixture;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,6 +47,9 @@ public class ReservationFacadeTest {
 
 	@Mock
 	UserService userService;
+
+	@Mock
+	CompensationProvider compensationProvider;
 
 	@Nested
 	class 예약_만료 {
@@ -81,6 +86,11 @@ public class ReservationFacadeTest {
 			ReservationResult reservationResult = new ReservationResult(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, Instant.now(), null);
 			when(reservationService.reserve(any(CreateReservationDto.class))).thenReturn(reservationResult);
 
+			when(compensationProvider.handle(any())).thenAnswer(invocation -> {
+				CompensationProvider.MainTask<?> callback = invocation.getArgument(0); // 콜백 함수 (=handle 메서드의 첫 번째 인자)
+				return callback.execute(CompensationProviderFixture.createStack()); // 콜백함수 실행
+			});
+
 			// when
 			ReservationResult result = reservationFacade.reserve(dto);
 
@@ -103,6 +113,11 @@ public class ReservationFacadeTest {
 
 			ReservationResult paidReservation = new ReservationResult(1L, 1L, 1L, 1000L, ReservationStatus.CONFIRMED, Instant.now(), Instant.now());
 			when(reservationService.confirmReservation(any())).thenReturn(paidReservation);
+
+			when(compensationProvider.handle(any())).thenAnswer(invocation -> {
+				CompensationProvider.MainTask<?> callback = invocation.getArgument(0);
+				return callback.execute(CompensationProviderFixture.createStack());
+			});
 
 			ReservationPaymentDto dto = new ReservationPaymentDto(1L, 1L);
 

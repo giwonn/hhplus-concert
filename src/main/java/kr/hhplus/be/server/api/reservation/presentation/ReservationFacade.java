@@ -13,6 +13,7 @@ import kr.hhplus.be.server.api.user.application.UserService;
 import kr.hhplus.be.server.api.user.application.port.in.UserPointDto;
 import kr.hhplus.be.server.api.user.application.port.in.UserPointHistoryDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
+import kr.hhplus.be.server.provider.CompensationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class ReservationFacade {
 	private final ReservationService reservationService;
 	private final ConcertService concertService;
 	private final UserService userService;
+	private final CompensationProvider compensationProvider;
 
 	@Scheduled(cron = "0 * * * * *")
 	@LogExecutionTime
@@ -36,21 +38,26 @@ public class ReservationFacade {
 	}
 
 	public ReservationResult reserve(CreateReservationDto dto) {
+		return compensationProvider.handle(compensations -> {
 			ConcertSeatResult concertSeat = concertService.reserveSeat(dto.concertSeatId());
 			compensations.add(() -> concertService.unReserveSeat(concertSeat.id()));
 
 			CreateReservationDto reservationDto = new CreateReservationDto(
 					concertSeat.id(), dto.userId(), concertSeat.amount(), dto.date());
 			return reservationService.reserve(reservationDto);
+		});
 	}
 
 	public ReservationPaymentResult payment(ReservationPaymentDto dto) {
 		ReservationResult reservation = reservationService.findById(dto.reservationId());
+
+		return compensationProvider.handle(compensations -> {
 			UserPointHistoryResult usedPoint = userService.usePoint(new UserPointDto(reservation.userId(), reservation.amount()));
 			compensations.add(() -> userService.rollbackPoint(UserPointHistoryDto.from(usedPoint)));
 
 			ConfirmReservationDto confirmReservationDto = new ConfirmReservationDto(dto.reservationId(), usedPoint.transactionAt());
 			ReservationResult reservationResult = reservationService.confirmReservation(confirmReservationDto);
 			return ReservationPaymentResult.of(reservationResult.id(), usedPoint.point());
+		});
 	}
 }
