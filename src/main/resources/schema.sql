@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS user (
   id bigint PRIMARY KEY AUTO_INCREMENT,
-  point bigint not null
+  point bigint not null,
+  version bigint null
 );
 
 CREATE TABLE IF NOT EXISTS user_point_history (
@@ -8,7 +9,8 @@ CREATE TABLE IF NOT EXISTS user_point_history (
   user_id bigint not null,
   action varchar(30) not null,
   amount bigint not null,
-  transaction_at timestamp
+  transaction_at timestamp,
+  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS token (

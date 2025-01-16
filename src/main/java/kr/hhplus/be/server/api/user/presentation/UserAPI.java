@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @Tag(name = "User", description = "유저 API")
-public interface UserControllerDocs {
+public interface UserAPI {
 
 	@Operation(summary = "유저 포인트 조회", description = "유저의 포인트를 조회합니다.")
 	@ApiResponses(value = {
