@@ -12,7 +12,7 @@ import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.user.application.UserService;
 import kr.hhplus.be.server.api.user.application.port.in.UserPointDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
-import kr.hhplus.be.server.common.provider.FixedTimeProvider;
+import kr.hhplus.be.server.provider.FixedTimeProvider;
 import kr.hhplus.be.server.provider.CompensationProvider;
 import kr.hhplus.be.server.provider.CompensationProviderFixture;
 import org.junit.jupiter.api.Nested;

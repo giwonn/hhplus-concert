@@ -58,11 +58,10 @@ public class ReservationService {
 
 	@Transactional
 	public ReservationResult confirmReservation(ConfirmReservationDto dto) {
-		Reservation reservation = reservationRepository.findByIdWithLock(dto.reservationId())
+		Reservation reservation = reservationRepository.findById(dto.reservationId())
 				.orElseThrow(() -> new CustomException(ReservationErrorCode.NOT_FOUND));
 
-		reservation.addPaymentTime(dto.transactionAt());
-		reservation.setStatus(ReservationStatus.CONFIRMED);
+		reservation.confirm(dto.transactionAt());
 
 		return ReservationResult.from(reservationRepository.save(reservation));
 	}

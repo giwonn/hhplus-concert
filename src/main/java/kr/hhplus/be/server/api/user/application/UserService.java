@@ -5,6 +5,7 @@ import kr.hhplus.be.server.api.user.application.port.in.UserPointHistoryDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointResult;
 import kr.hhplus.be.server.api.user.domain.entity.User;
+import kr.hhplus.be.server.api.user.domain.entity.UserPointHistory;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
 import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
 import kr.hhplus.be.server.exception.CustomException;

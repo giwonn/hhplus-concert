@@ -117,19 +117,19 @@ public class UserServiceIntegrationTest extends BaseIntegrationTest {
 			User user = UserFixture.create(2000L);
 			userRepository.save(user);
 
-			UserPointHistoryDto dto = new UserPointHistoryDto(userId, -1000L, Instant.now());
+			UserPointHistoryDto dto = new UserPointHistoryDto(userId, 1000L, Instant.now());
 
 			// when
 			UserPointHistoryResult sut = userService.rollbackPoint(dto);
 
 			// then
 			assertThat(sut.userId()).isEqualTo(userId);
-			assertThat(sut.point()).isEqualTo(1000L);
+			assertThat(sut.point()).isEqualTo(3000L);
 
 			List<UserPointHistory> userPointHistory = userPointHistoryRepository.findByUserId(userId);
 			assertThat(userPointHistory.get(0).getUserId()).isEqualTo(userId);
 			assertThat(userPointHistory.get(0).getAction()).isEqualTo(UserPointAction.ROLLBACK);
-			assertThat(userPointHistory.get(0).getAmount()).isEqualTo(-1000L);
+			assertThat(userPointHistory.get(0).getAmount()).isEqualTo(1000L);
 		}
 	}
 }

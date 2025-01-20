@@ -24,7 +24,15 @@ public class UserPointHistory {
 
 	private Instant transactionAt;
 
-	public UserPointHistory(long userId, UserPointAction action, long amount, Instant transactionAt) {
+	UserPointHistory(long userId, UserPointAction action, long amount, Instant transactionAt) {
+		this.userId = userId;
+		this.action = action;
+		this.amount = amount;
+		this.transactionAt = transactionAt;
+	}
+
+	UserPointHistory(long id, long userId, UserPointAction action, long amount, Instant transactionAt) {
+		this.id = id;
 		this.userId = userId;
 		this.action = action;
 		this.amount = amount;

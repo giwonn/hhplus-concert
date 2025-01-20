@@ -26,6 +26,9 @@ public class User {
 	@JoinColumn(name = "userId")
 	final List<UserPointHistory> userPointHistories = new ArrayList<>();
 
+	@Version
+	private Long version;
+
 
 	User(long id, long point) {
 		this.id = id;

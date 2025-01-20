@@ -48,5 +48,6 @@ CREATE TABLE IF NOT EXISTS reservation (
   amount bigint not null,
   status varchar(30) not null,
   created_at timestamp not null,
-  paid_at timestamp
+  paid_at timestamp,
+  version bigint null
 );

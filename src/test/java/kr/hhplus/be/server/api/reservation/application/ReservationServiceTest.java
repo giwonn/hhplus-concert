@@ -179,7 +179,7 @@ public class ReservationServiceTest {
 					ReservationStatus.WAITING,
 					timeProvider.now()
 			);
-			when(reservationRepository.findByIdWithLock(anyLong())).thenReturn(Optional.of(reservation));
+			when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(reservation));
 
 			Reservation afterReservation = ReservationFixture.createMock(
 					1L,
@@ -206,7 +206,7 @@ public class ReservationServiceTest {
 		@Test
 		void 존재하지_않는_예약() {
 			// given
-			when(reservationRepository.findByIdWithLock(anyLong())).thenReturn(Optional.empty());
+			when(reservationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
 			ConfirmReservationDto dto = new ConfirmReservationDto(1L, timeProvider.now());
 

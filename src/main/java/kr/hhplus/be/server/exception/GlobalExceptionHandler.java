@@ -19,9 +19,15 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorResponse<Void>> handleException(Exception e) {
+		log.warn("[Exception] Code: {}, Reason: {}", 500, e.getMessage(), e);
+		return ResponseEntity.status(500).body(new ErrorResponse<>("500", e.getMessage(), null));
+	}
+
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<ErrorResponse<Void>> handleCustomException(CustomException e) {
-		log.warn("[Exception] Code: {}, Reason: {}", e.getCode(), e.getReason(), e);
+		log.warn("[CustomException] Code: {}, Reason: {}", e.getCode(), e.getReason(), e);
 		return ResponseEntity.status(e.getHttpStatus()).body(ErrorResponse.from(e));
 	}
 
