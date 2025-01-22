@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.api.reservation.presentation;
 
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
-import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
+import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeatFixture;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
@@ -72,9 +72,9 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 
 
 			final List<ConcertSeat> tempConcertSeats = List.of(
-					TestConcertSeatFactory.create( 1L, 1, 1000L, true),
-					TestConcertSeatFactory.create( 2L, 1, 1000L, true),
-					TestConcertSeatFactory.create( 3L, 1, 1000L, true)
+					ConcertSeatFixture.create( 1L, 1, 1000L, true),
+					ConcertSeatFixture.create( 2L, 1, 1000L, true),
+					ConcertSeatFixture.create( 3L, 1, 1000L, true)
 			);
 			concertSeatRepository.saveAll(tempConcertSeats);
 
@@ -115,7 +115,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 성공() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(3L, 1, 1000L, false);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
 			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L, Date.valueOf("2024-10-01"));
 
@@ -132,7 +132,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 실패_이미_좌석이_예약됨() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 2, 1000L, true);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, true);
 			concertSeatRepository.save(concertSeat);
 			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
 
@@ -144,7 +144,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 실패_동일한_좌석의_예약이_존재함() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 2, 1000L, false);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, false);
 			concertSeatRepository.save(concertSeat);
 			Reservation testReservation = ReservationFixture.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);

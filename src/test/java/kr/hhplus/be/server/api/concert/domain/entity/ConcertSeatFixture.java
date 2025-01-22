@@ -1,8 +1,14 @@
 package kr.hhplus.be.server.api.concert.domain.entity;
 
-public class TestConcertSeatFactory {
+import java.util.List;
+
+public class ConcertSeatFixture {
 
 	public static ConcertSeat createMock(long id, long concertScheduleId, int seatNum, long amount, boolean isReserved) {
+		return new ConcertSeat(id, concertScheduleId, seatNum, amount, isReserved);
+	}
+
+	public static ConcertSeat createMock(long id, long concertScheduleId, int seatNum, long amount, boolean isReserved, List<ConcertSeat> seats) {
 		return new ConcertSeat(id, concertScheduleId, seatNum, amount, isReserved);
 	}
 

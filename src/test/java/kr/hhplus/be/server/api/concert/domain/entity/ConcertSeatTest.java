@@ -9,7 +9,7 @@ class ConcertSeatTest {
 	@Test
 	void 좌석_예약_성공() {
 		// given
-		ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, false);
+		ConcertSeat seat = ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, false);
 
 		// when
 		seat.reserve();
@@ -21,7 +21,7 @@ class ConcertSeatTest {
 	@Test
 	void 좌석_예약_해제_성공() {
 		// given
-		ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, true);
+		ConcertSeat seat = ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, true);
 
 		// when
 		seat.unReserve();

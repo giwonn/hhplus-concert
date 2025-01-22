@@ -28,7 +28,6 @@ CREATE TABLE IF NOT EXISTS concert_schedule (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   concert_id bigint not null,
   concert_date date not null,
-  is_sold_out boolean default false,
   INDEX idx_concert_id (concert_id)
 );
 

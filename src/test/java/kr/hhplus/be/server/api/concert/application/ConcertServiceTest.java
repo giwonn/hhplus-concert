@@ -4,8 +4,8 @@ import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResul
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
-import kr.hhplus.be.server.api.concert.domain.entity.TestConcertScheduleFactory;
-import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
+import kr.hhplus.be.server.api.concert.domain.entity.ConcertScheduleFixture;
+import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeatFixture;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
@@ -43,10 +43,11 @@ public class ConcertServiceTest {
 		void 성공() {
 			// given
 			List<ConcertSchedule> schedules = List.of(
-					TestConcertScheduleFactory.createMock(1L, 1L, LocalDate.parse("2025-01-01"), false),
-					TestConcertScheduleFactory.createMock(3L, 1L, LocalDate.parse("2025-01-03"), false)
+					ConcertScheduleFixture.createMock(1L, 1L, LocalDate.parse("2025-01-01"),
+							List.of(ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, false))),
+					ConcertScheduleFixture.createMock(3L, 1L, LocalDate.parse("2025-01-03"),
+							List.of(ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, true)))
 			);
-
 			when(concertScheduleRepository.findByConcertId(1L)).thenReturn(schedules);
 
 			// when
@@ -54,13 +55,9 @@ public class ConcertServiceTest {
 
 			// then
 			assertAll(() -> {
+				assertThat(sut).hasSize(1);
 				assertThat(sut.get(0).id()).isEqualTo(1L);
 				assertThat(sut.get(0).concertDate()).isEqualTo(LocalDate.parse("2025-01-01"));
-				assertThat(sut.get(0).isSoldOut()).isFalse();
-
-				assertThat(sut.get(1).id()).isEqualTo(3L);
-				assertThat(sut.get(1).concertDate()).isEqualTo(LocalDate.parse("2025-01-03"));
-				assertThat(sut.get(0).isSoldOut()).isFalse();
 			});
 		}
 	}
@@ -72,8 +69,8 @@ public class ConcertServiceTest {
 		void 예약_가능한_콘서트_좌석을_조회한다() {
 			// given
 			List<ConcertSeat> seats = List.of(
-					TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, false),
-					TestConcertSeatFactory.createMock(3L, 1L, 3, 1000L, false)
+					ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, false),
+					ConcertSeatFixture.createMock(3L, 1L, 3, 1000L, false)
 			);
 
 			when(concertSeatRepository.findByConcertScheduleIdAndIsReservedFalse(1L)).thenReturn(seats);
@@ -100,15 +97,13 @@ public class ConcertServiceTest {
 		@Test
 		void 성공() {
 			// given
-			ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, false);
+			ConcertSeat seat = ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, false);
 			when(concertSeatRepository.findById(seat.getId())).thenReturn(Optional.of(seat));
-			when(concertSeatRepository.save(any(ConcertSeat.class))).thenReturn(seat);
 
 			// when
 			ConcertSeatResult sut = concertService.reserveSeat(seat.getId());
 
 			// then
-			verify(concertSeatRepository, times(1)).save(seat);
 			assertThat(sut.id()).isEqualTo(seat.getId());
 			assertThat(sut.concertScheduleId()).isEqualTo(seat.getConcertScheduleId());
 			assertThat(sut.seatNum()).isEqualTo(seat.getSeatNum());
@@ -118,7 +113,7 @@ public class ConcertServiceTest {
 		@Test
 		void 실패_이미예약됨() {
 			// given
-			ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, true);
+			ConcertSeat seat = ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, true);
 			when(concertSeatRepository.findById(seat.getId())).thenReturn(Optional.of(seat));
 
 			// when & then
@@ -141,9 +136,8 @@ public class ConcertServiceTest {
 		@Test
 		void 성공() {
 			// given
-			ConcertSeat seat = TestConcertSeatFactory.createMock(1L, 1L, 1, 1000L, true);
+			ConcertSeat seat = ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, true);
 			when(concertSeatRepository.findByIdWithLock(seat.getId())).thenReturn(Optional.of(seat));
-			when(concertSeatRepository.save(any(ConcertSeat.class))).thenReturn(seat);
 
 			// when
 			ConcertSeatResult sut = concertService.unReserveSeat(seat.getId());

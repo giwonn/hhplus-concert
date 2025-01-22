@@ -4,10 +4,10 @@ import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResul
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
-import kr.hhplus.be.server.api.concert.domain.entity.TestConcertScheduleFactory;
+import kr.hhplus.be.server.api.concert.domain.entity.ConcertScheduleFixture;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
-import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
+import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeatFixture;
 import kr.hhplus.be.server.base.BaseIntegrationTest;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,9 +38,9 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 		void concertSeatId_리스트를_받아서_임시_배정을_해제한다() {
 			// when
 			final List<ConcertSeat> concertSeats = List.of(
-					TestConcertSeatFactory.create( 1L, 1, 1000L, false),
-					TestConcertSeatFactory.create( 2L, 1, 1000L, true),
-					TestConcertSeatFactory.create( 3L, 1, 1000L, false)
+					ConcertSeatFixture.create( 1L, 1, 1000L, false),
+					ConcertSeatFixture.create( 2L, 1, 1000L, true),
+					ConcertSeatFixture.create( 3L, 1, 1000L, false)
 			);
 			concertSeatRepository.saveAll(concertSeats);
 
@@ -64,11 +64,16 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 		void 성공() {
 			// given
 			final List<ConcertSchedule> concertSchedules = List.of(
-					TestConcertScheduleFactory.create(1L, LocalDate.parse("2025-01-01"), false),
-					TestConcertScheduleFactory.create(1L, LocalDate.parse("2025-01-02"), true),
-					TestConcertScheduleFactory.create(1L, LocalDate.parse("2025-01-03"), false)
+					ConcertScheduleFixture.create(1L, LocalDate.parse("2025-01-01"))
 			);
 			concertScheduleRepository.saveAll(concertSchedules);
+
+			final List<ConcertSeat> seats = List.of(
+					ConcertSeatFixture.create(1L, 1, 1000L, false),
+					ConcertSeatFixture.create(1L, 2, 1000L, true),
+					ConcertSeatFixture.create(1L, 3, 1000L, true)
+			);
+			concertSeatRepository.saveAll(seats);
 
 			// when
 			List<ConcertScheduleResult> sut = concertService.getReservableSchedules(1L)
@@ -78,11 +83,6 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 			assertAll(() -> {
 				assertThat(sut.get(0).id()).isEqualTo(1L);
 				assertThat(sut.get(0).concertDate()).isEqualTo("2025-01-01");
-				assertThat(sut.get(0).isSoldOut()).isFalse();
-
-				assertThat(sut.get(1).id()).isEqualTo(3L);
-				assertThat(sut.get(1).concertDate()).isEqualTo("2025-01-03");
-				assertThat(sut.get(1).isSoldOut()).isFalse();
 			});
 		}
 	}
@@ -93,9 +93,9 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 		void 성공() {
 			// given
 			final List<ConcertSeat> concertSeats = List.of(
-					TestConcertSeatFactory.create(1L, 1, 1000L, false),
-					TestConcertSeatFactory.create(1L, 2, 1000L, true),
-					TestConcertSeatFactory.create(1L, 3, 1000L, false)
+					ConcertSeatFixture.create(1L, 1, 1000L, false),
+					ConcertSeatFixture.create(1L, 2, 1000L, true),
+					ConcertSeatFixture.create(1L, 3, 1000L, false)
 			);
 			concertSeatRepository.saveAll(concertSeats);
 
@@ -119,7 +119,7 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 성공() {
 			// given
-			final ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 1, 1000L, false);
+			final ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
 
 			// when
@@ -140,7 +140,7 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 성공() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 1, 1000L, true);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 1, 1000L, true);
 			concertSeatRepository.save(concertSeat);
 
 			// when
