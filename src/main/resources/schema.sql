@@ -11,8 +11,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS user (
   id bigint PRIMARY KEY AUTO_INCREMENT,
-  point bigint not null,
-  version bigint not null default 0
+  point bigint not null
 );
 
 CREATE TABLE IF NOT EXISTS user_point_history (

@@ -33,7 +33,7 @@ public class UserService {
 
 	@Transactional
 	public UserPointHistoryResult chargePoint(UserPointDto dto) {
-		User user = userRepository.findById(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+		User user = userRepository.findByIdWithLock(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
 		Instant transactionAt = timeProvider.now();
 		user.chargePoint(dto.point(), transactionAt);
@@ -43,7 +43,7 @@ public class UserService {
 
 	@Transactional
 	public UserPointHistoryResult usePoint(UserPointDto dto) {
-		User user = userRepository.findById(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+		User user = userRepository.findByIdWithLock(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
 		Instant transactionAt = timeProvider.now();
 		user.usePoint(dto.point(), transactionAt);
