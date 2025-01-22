@@ -1,0 +1,15 @@
+version: '3'
+services:
+  k6:
+    image: grafana/k6:latest
+    profiles:
+      - debug
+    networks:
+      - k6
+    volumes:
+      - ./k6:/scripts
+
+networks:
+  k6:
+  default:
+    driver: bridge

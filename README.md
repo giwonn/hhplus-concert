@@ -23,5 +23,7 @@
 
 ```bash
 docker-compose up -d
+// 좌석 예약 부하 테스트
+docker compose -f docker-compose-k6.yml run k6 run /scripts/script.js
 ```
 
