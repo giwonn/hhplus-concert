@@ -33,7 +33,7 @@ public class Reservation {
 	private Instant paidAt;
 
 	@Version
-	private Long version;
+	private long version;
 
 
 	Reservation(long id, long concertSeatId, long userId, long amount, ReservationStatus status, Instant createdAt, Instant paidAt) {
@@ -70,6 +70,10 @@ public class Reservation {
 
 		status = ReservationStatus.CONFIRMED;
 		this.paidAt = transactionAt;
+	}
+
+	public Instant getExpiredAt() {
+		return createdAt.plusSeconds(EXPIRE_SECONDS);
 	}
 
 }

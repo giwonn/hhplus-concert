@@ -27,7 +27,7 @@ public class ReservationService {
 	public List<ReservationResult> expireReservations() {
 		List<Reservation> expireReservations = reservationRepository.findByStatusWithLock(ReservationStatus.WAITING)
 				.stream()
-				.filter(reservation -> reservation.getCreatedAt().isBefore(timeProvider.now()))
+				.filter(reservation -> reservation.getExpiredAt().isBefore(timeProvider.now()))
 				.toList();
 
 		reservationRepository.updateStatus(expireReservations, ReservationStatus.EXPIRED);
@@ -40,11 +40,11 @@ public class ReservationService {
 
 	@Transactional
 	public ReservationResult reserve(CreateReservationDto dto) {
-		List<Reservation> duplicateReservations = reservationRepository.findByConcertSeatIdAndStatus(dto.concertSeatId(), ReservationStatus.WAITING);
+		List<Reservation> duplicateReservations = reservationRepository.findByConcertSeatIdAndStatus(dto.seatId(), ReservationStatus.WAITING);
 		if (!duplicateReservations.isEmpty()) {
 			throw new CustomException(ReservationErrorCode.ALREADY_SEAT_RESERVATION);
 		}
-		Reservation reservation = Reservation.of(dto.concertSeatId(), dto.userId(), dto.amount(), timeProvider.now());
+		Reservation reservation = Reservation.of(dto.seatId(), dto.userId(), dto.amount(), timeProvider.now());
 		return ReservationResult.from(reservationRepository.save(reservation));
 	}
 

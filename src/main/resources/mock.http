@@ -17,12 +17,12 @@ GET http://localhost:8080/concerts/1/schedules/1/available-seats?date=2024-01-01
 
 
 ### POST 좌석 예약 요청
-POST http://localhost:8080/concerts/reservation
+POST http://localhost:8080/reservation/concerts
 Content-Type: application/json
 
 {
-  "concertId": 1,
   "seatId": 1,
+  "userId": 1,
   "date": "2024-01-01"
 }
 

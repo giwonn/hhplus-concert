@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS user (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   point bigint not null,
-  version bigint null
+  version bigint not null default 0
 );
 
 CREATE TABLE IF NOT EXISTS user_point_history (
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS concert_seat (
   seat_num int not null,
   amount bigint not null,
   is_reserved boolean default false,
-  version bigint null
+  version bigint not null default 0
 );
 
 CREATE TABLE IF NOT EXISTS reservation (
@@ -48,5 +48,5 @@ CREATE TABLE IF NOT EXISTS reservation (
   status varchar(30) not null,
   created_at timestamp not null,
   paid_at timestamp,
-  version bigint null
+  version bigint not null default 0
 );

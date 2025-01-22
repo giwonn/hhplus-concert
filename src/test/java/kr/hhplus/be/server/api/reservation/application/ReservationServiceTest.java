@@ -55,7 +55,7 @@ public class ReservationServiceTest {
 		void 좌석_배정시간이_지난_예약_만료처리_성공() {
 			// given
 			List<Reservation> reservations = List.of(
-					ReservationFixture.createMock(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.createMock(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(Reservation.EXPIRE_SECONDS+1), null),
 					ReservationFixture.createMock( 2L, 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
 					ReservationFixture.createMock(3L, 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);

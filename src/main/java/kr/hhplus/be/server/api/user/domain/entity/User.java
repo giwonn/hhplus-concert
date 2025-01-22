@@ -27,7 +27,7 @@ public class User {
 	final List<UserPointHistory> userPointHistories = new ArrayList<>();
 
 	@Version
-	private Long version;
+	private long version;
 
 
 	User(long id, long point) {

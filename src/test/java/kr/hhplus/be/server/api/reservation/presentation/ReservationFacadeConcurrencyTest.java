@@ -4,6 +4,7 @@ import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeatFixture;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
+import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.base.BaseIntegrationTest;
@@ -46,7 +47,7 @@ class ReservationFacadeConcurrencyTest extends BaseIntegrationTest {
 			int tryCount = 20;
 			for (long i = 1; i <= tryCount; i++) {
 				final long userId = i;
-				tasks.add(() -> reservationFacade.reserve(new CreateReservationDto(1L, userId, 1000L, Date.valueOf("2024-10-01"))));
+				tasks.add(() -> reservationFacade.reserve(new ReserveSeatDto(1L, userId, Date.valueOf("2024-10-01"))));
 			}
 
 			ConcurrencyTestUtil.Result result = ConcurrencyTestUtil.run(tasks);

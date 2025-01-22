@@ -22,7 +22,7 @@ public class ConcertSeat {
 	private boolean isReserved;
 
 	@Version
-	private Long version;
+	private long version;
 
 	ConcertSeat(long id, long concertScheduleId, int seatNum, long amount, boolean isReserved) {
 		this.id = id;

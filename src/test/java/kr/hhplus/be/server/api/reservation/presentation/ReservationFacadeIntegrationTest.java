@@ -6,6 +6,7 @@ import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
+import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
@@ -64,7 +65,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		void 만료시간이_지난_예약은_취소되고_좌석배정은_해제된다() {
 			// when
 			final List<Reservation> tempReservations = List.of(
-					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(Reservation.EXPIRE_SECONDS+1), null),
 					ReservationFixture.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
 					ReservationFixture.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);
@@ -117,7 +118,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			// given
 			ConcertSeat concertSeat = ConcertSeatFixture.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 4L, Date.valueOf("2024-10-01"));
 
 			// when
 			ReservationResult reservation = reservationFacade.reserve(dto);
@@ -134,7 +135,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			// given
 			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, true);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
@@ -148,7 +149,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			concertSeatRepository.save(concertSeat);
 			Reservation testReservation = ReservationFixture.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
