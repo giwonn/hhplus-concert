@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.api.concert.application;
 
+import kr.hhplus.be.server.annotation.simplelock.SimpleLock;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResult;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
@@ -40,6 +41,7 @@ public class ConcertService {
 				.toList();
 	}
 
+	@SimpleLock(key = "'seatId:' + #seatId")
 	@Transactional
 	public ConcertSeatResult reserveSeat(long seatId) {
 		ConcertSeat seat = concertSeatRepository.findById(seatId)

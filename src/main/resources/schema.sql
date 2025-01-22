@@ -1,3 +1,14 @@
+
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS user_point_history;
+DROP TABLE IF EXISTS token;
+DROP TABLE IF EXISTS concert;
+DROP TABLE IF EXISTS concert_schedule;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS concert_seat;
+SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE IF NOT EXISTS user (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   point bigint not null,
