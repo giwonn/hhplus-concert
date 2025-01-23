@@ -24,7 +24,9 @@ public class ApiLoggingFilter extends OncePerRequestFilter {
 			String path = request.getRequestURI();
 			int status = response.getStatus();
 
-			log.info("[{}] {} {} - {} ms", method, path, status, duration);
+			if (!(path.equals("/actuator/prometheus") && status == 200)) {
+				log.info("[{}] {} {} - {} ms", method, path, status, duration);
+			}
 		}
 	}
 }
