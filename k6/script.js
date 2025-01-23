@@ -2,16 +2,11 @@ import http from "k6/http";
 import { check } from "k6";
 import { Counter } from "k6/metrics";
 
-const vus = 300;
-
 export const options = {
   stages: [
-    { duration: "1s", target: 1000 },
-    { duration: "1s", target: 900 },
-    { duration: "1s", target: 800 },
-    { duration: "1s", target: 700 },
-    { duration: "1s", target: 500 },
-    { duration: "1s", target: 400 },
+    { duration: "3s", target: 100 },
+    { duration: "3s", target: 50 },
+    { duration: "3s", target: 10 },
   ],
 };
 
@@ -22,7 +17,7 @@ export default () => {
   const url = "http://host.docker.internal:8080/reservation/concerts";
   const payload = JSON.stringify({
     concertId: 1,
-    seatId: Math.floor(Math.random() * 10) + 1,
+    seatId: Math.floor(Math.random() * 20) + 1,
     userId: 1,
     amount: 1000,
     date: "2025-01-01"

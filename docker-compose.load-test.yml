@@ -13,11 +13,11 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1.0'
-          memory: 1024M
+          cpus: '2.0'
+          memory: 2048M
         reservations:
-          cpus: '1.0'
-          memory: 1024M
+          cpus: '2.0'
+          memory: 2048M
     depends_on:
       mysql:
         condition: service_healthy
