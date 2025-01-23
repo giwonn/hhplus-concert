@@ -37,11 +37,13 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
 	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
+	implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 
 	// Custom
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+	implementation("io.micrometer:micrometer-registry-prometheus")
 
 
 	// DB

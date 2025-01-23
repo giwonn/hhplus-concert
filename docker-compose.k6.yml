@@ -1,0 +1,10 @@
+version: '3'
+services:
+  k6:
+    image: grafana/k6:latest
+    ports:
+        - "6565:6565"
+    volumes:
+      - ./k6:/scripts
+    command: run --out influxdb=http://localhost:8086/hhplus /scripts/script.js
+    network_mode: host

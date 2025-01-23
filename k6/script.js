@@ -2,17 +2,17 @@ import http from "k6/http";
 import { check } from "k6";
 import { Counter } from "k6/metrics";
 
-const vus = 400;
+const vus = 300;
 
 export const options = {
-  scenarios: {
-    scenarios_example: {
-      executor: "per-vu-iterations", // 시나리오 실행 방식 (per-vu-iterations, constant-vus, ramping-vus)
-      vus: vus, // 가상 사용자 수
-      iterations: 1, // 사용자당 몇번 요청을 보낼지 (총 요청횟수 = vus * iterations)
-      maxDuration: "30s", // 타임아웃 (30초 초과하면 나머지 작업은 drop
-    },
-  },
+  stages: [
+    { duration: "1s", target: 1000 },
+    { duration: "1s", target: 900 },
+    { duration: "1s", target: 800 },
+    { duration: "1s", target: 700 },
+    { duration: "1s", target: 500 },
+    { duration: "1s", target: 400 },
+  ],
 };
 
 const successCount = new Counter("success_count");
@@ -22,7 +22,7 @@ export default () => {
   const url = "http://host.docker.internal:8080/reservation/concerts";
   const payload = JSON.stringify({
     concertId: 1,
-    seatId: 2,
+    seatId: Math.floor(Math.random() * 10) + 1,
     userId: 1,
     amount: 1000,
     date: "2025-01-01"
