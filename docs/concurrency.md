@@ -69,11 +69,11 @@ A 스레드의 작업 결과가 반영되기 전의 데이터를 조회하므로
 ![포인트_충전_이슈_발생](./images/concurrency/point_charge.png)
 
 
-## 동시성 제어 방법
-좌석 예약을 예로 들자면, 예약하고자 하는 좌석에 Lock을 걸어 동시성 문제를 해결할 수 있습니다.
+## 2. 동시성 제어 방법
+좌석 예약의 경우, 예약하고자 하는 좌석에 Lock을 걸어 동시성 문제를 해결할 수 있습니다.
 
 
-### 1. 배타적 락 (Exclusive Lock)
+### 2-1. 배타적 락 (Exclusive Lock)
 배타적 락은 데이터베이스 수준의 락으로, 다른 트랜잭션이 해당 데이터를 **읽거나 변경하지 못하도록** 합니다.  
 줄여서 `x-lock`으로 불리기도 합니다.
 ```java
@@ -92,7 +92,7 @@ interface SeatRepository extends JpaRepository<Seat, Long> {
   - 좌석 선점 특성상 순간적으로 높은 동시성을 유발하기에 락에 의한 경합을 심하게 유발할 수 있음
   - 좌석이 이미 선점된 후에도 조회시 락이 필요함
 
-### 2. 낙관적 락 (Optimistic Lock)
+### 2-2. 낙관적 락 (Optimistic Lock)
 낙관적 락은 애플리케이션 수준의 락이며, 데이터를 변경하기 전에 **데이터의 버전을 체크**하여 충돌을 방지하는 방식입니다.
 ```java
 class Seat {
@@ -122,7 +122,7 @@ class Seat {
 - Lock 미반납으로 인한 데드락은 TTL을 이용하여 방지한다고 가정하였습니다.
 ```
 
-### 3. Redis - Simple Lock
+### 2-3. Redis - Simple Lock
 Redis의 Simple Lock은 key 선점 실패시 재시도를 하지 않고 요청을 실패처리하는 방식입니다.
 ![동시성_해결_레디스_심플_락](./images/concurrency/redis_simple_lock.png)
 
@@ -132,7 +132,7 @@ Redis의 Simple Lock은 key 선점 실패시 재시도를 하지 않고 요청�
   - 최초로 락을 획득한 스레드가 좌석 선점에 실패하면, 동시에 들어온 요청들은 시도도 못해보고 실패하기 때문에 공정하지 않을 수 있음
 
 
-### 4. Redis - Pub/Sub
+### 2-4. Redis - Pub/Sub
 Redis의 메시지 브로커로 사용하여 락을 획득한 스레드에게 이벤트를 보내 선점했음을 알려주는 방식입니다.
 
 ![동시성_해결_레디스_pub_sub](./images/concurrency/redis_pub_sub.png)
@@ -146,7 +146,7 @@ Redis의 메시지 브로커로 사용하여 락을 획득한 스레드에게 �
 
 
 
-## 사용한 Lock
+## 3. 사용한 Lock
 
 ### 문제1: 좌석 선점 (Simple Lock + Optimistic Lock)
 `Redis - Simple Lock` + `낙관적 락`을 사용하였습니다.
@@ -176,25 +176,64 @@ Redis의 메시지 브로커로 사용하여 락을 획득한 스레드에게 �
 `(중복 요청 판별 여부는 차주에 requestId를 이용하여 처리할 예정입니다.)`
 
 
-## 좌석 선점 부하 테스트
-로컬 환경에서 테스트하여 일관성있지는 않지만 redis 사용 유무에 따른 대략적인 차이를 확인할 수 있었습니다.  
-1개의 좌석에 대해 400번의 요청을 날려 테스트하였습니다.  
-(좌석 하나만 테스트하는 점과 요청 횟수도 과한 편이라 이 부분은 차주에 다시 보완하도록 하겠습니다...)
-### 서버
-https_reqs(초당 처리량)만 보아도 성능이 2배 가량 차이나는 것을 알 수 있습니다.
-- **Redis 미사용**  
-  ![redis_미사용_서버](./images/concurrency/redis_미사용_서버_성능.png)
-  
+## 4. 좌석 선점 부하 테스트
+Redis 사용 유무에 따른 하기 4가지를 확인하기 위해 부하테스트를 진행하였습니다.  
+`낙관적 락만 사용`, `낙관적 락 + Redis Simple Lock을 사용`하는 경우를 비교하였습니다.
 
-- **Redis 사용**  
-  ![redis_사용_서버](./images/concurrency/redis_사용_서버_성능.png)
+- 요청 처리량
+- 응답 시간
+- 서버 부하
+- DB 부하
 
-### DB
-`Mysql Workbench` 대시보드로 대략적인 성능을 확인하였습니다.
-Redis를 사용할 경우 `Simple Lock`을 사용하여 요청들이 트랜잭션을 생성하지도 못하여 전체적으로 리소스 소모량의 차이가 크게 나타납니다.
-- **Redis 미사용**  
-![redis_미사용_DB](./images/concurrency/redis_미사용_DB_성능.png)
+```
+Server 스펙
+- cpus: 2
+- memory: 2048M
+
+DB, Redis 스펙
+- cpus: 1
+- memory: 1024M
+```
+
+### 요약
+전체적으로 Redis 사용시 응답 시간이 빠르며, 부하도 적은 것을 확인할 수 있습니다.
+
+|           지표            |  낙관적 락   | 낙관적 락 + Redis Simple Lock |
+|:-----------------------:|:--------:|:-------------------------:|
+|       초당 처리량 (평균)       |   751    |            775            |
+|       응답 시간 (평균)        | 25.65 ms |         18.23 ms          |
+|         부하 (평균)         | 1.26 CPU |         0.63 CPU          |
+| G1 Survivor 영역 사용량 (평균) | 3045968  |          1120142          |
+|      쿼리 실행 수 (평균)       |  1280 회  |          52.9 회           |
 
 
-- **Redis 사용**  
-![redis_사용_DB](./images/concurrency/redis_사용_DB_성능.png)
+
+### K6 테스트 결과 - 평균 응답 시간 7ms 감소 (32.5ms -> 25.5ms)  
+(HTTP Failures는 좌석 예약에 실패한 요청입니다.)
+- **Optimistic Lock**
+  ![redis_미사용_테스트](./images/concurrency/낙관_k6.png)
+
+
+- **Redis Simple Lock + Optimistic Lock**
+  ![redis_사용_테스트](./images/concurrency/심플_낙관_k6.png)
+
+
+
+### 서버 - 부하 평균 2배 감소 (1.26 CPU -> 0.63 CPU)  
+또한 Redis 사용시 **Survivor 영역의 사용량** 또한 **2배** 이상 적은 것을 확인할 수 있습니다.
+- **Optimistic Lock**
+  ![redis_미사용_서버](./images/concurrency/낙관_server.png)
+
+
+- **Redis Simple Lock + Optimistic Lock**  
+  ![redis_사용_서버](./images/concurrency/심플_낙관_server.png)
+
+### DB - 쿼리 실행 수 평균 25배 감소 (12,800 -> 52.9)
+- **Optimistic Lock**
+  ![redis_미사용_DB](./images/concurrency/낙관_DB.png)
+
+
+- **Redis Simple Lock + Optimistic Lock**
+![redis_사용_DB](./images/concurrency/심플_낙관_DB.png)
+
+
