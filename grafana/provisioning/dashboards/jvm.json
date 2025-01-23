@@ -37,7 +37,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
-  "id": 7,
+  "id": 2,
   "links": [],
   "panels": [
     {
@@ -121,6 +121,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "process_uptime_seconds{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -200,6 +201,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "process_start_time_seconds{application=\"$application\", instance=\"$instance\"}*1000",
           "format": "time_series",
           "intervalFactor": 2,
@@ -286,6 +288,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})*100/sum(jvm_memory_max_bytes{application=\"$application\",instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -381,6 +384,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})*100/sum(jvm_memory_max_bytes{application=\"$application\",instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -495,6 +499,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(rate(http_server_requests_seconds_count{application=\"$application\", instance=\"$instance\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -626,6 +631,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(rate(http_server_requests_seconds_count{application=\"$application\", instance=\"$instance\", status=~\"5..\"}[1m]))",
           "format": "time_series",
           "intervalFactor": 1,
@@ -726,6 +732,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(rate(http_server_requests_seconds_sum{application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))/sum(rate(http_server_requests_seconds_count{application=\"$application\", instance=\"$instance\", status!~\"5..\"}[1m]))",
           "format": "time_series",
           "hide": false,
@@ -840,6 +847,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "tomcat_threads_busy_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
@@ -1015,6 +1023,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"heap\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1144,7 +1153,7 @@
           },
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", area=\"nonheap\"})",
           "format": "time_series",
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -1270,6 +1279,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\"})",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1397,6 +1407,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "process_memory_vss_bytes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": true,
@@ -1549,6 +1560,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "system_cpu_usage{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
@@ -1678,6 +1690,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "system_load_average_1m{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1793,6 +1806,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "jvm_threads_live_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -1833,7 +1847,7 @@
           },
           "expr": "process_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "process",
           "refId": "D",
@@ -2024,6 +2038,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "jvm_threads_states_threads{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "intervalFactor": 2,
@@ -2128,6 +2143,7 @@
             "type": "prometheus",
             "uid": "PBFA97CFB590B2093"
           },
+          "interval": "$interval",
           "expr": "sum(rate(jvm_gc_pause_seconds_sum{application=\"$application\", instance=\"$instance\"}[1m])) by (application, instance) / on(application, instance) system_cpu_count",
           "format": "time_series",
           "intervalFactor": 1,
@@ -2308,7 +2324,7 @@
           },
           "expr": "increase(logback_events_total{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "{{level}}",
           "metric": "",
@@ -2415,6 +2431,7 @@
           "expr": "process_files_open_files{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
           "hide": false,
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "open",
           "metric": "",
@@ -2482,7 +2499,7 @@
           "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -2497,7 +2514,7 @@
           "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "commited",
           "metric": "",
@@ -2512,7 +2529,7 @@
           "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_heap\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "max",
           "metric": "",
@@ -2565,7 +2582,7 @@
           "expr": "jvm_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "used",
           "metric": "",
@@ -2580,7 +2597,7 @@
           "expr": "jvm_memory_committed_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "commited",
           "metric": "",
@@ -2595,7 +2612,7 @@
           "expr": "jvm_memory_max_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_memory_pool_nonheap\"}",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "max",
           "metric": "",
@@ -2645,6 +2662,7 @@
           "expr": "rate(jvm_gc_pause_seconds_count{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "{{action}} ({{cause}})",
           "refId": "A"
@@ -2680,6 +2698,7 @@
           "format": "time_series",
           "hide": false,
           "instant": false,
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "avg {{action}} ({{cause}})",
           "refId": "A"
@@ -2726,7 +2745,7 @@
           },
           "expr": "rate(jvm_gc_memory_allocated_bytes_total{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "allocated",
           "refId": "A"
@@ -2738,7 +2757,7 @@
           },
           "expr": "rate(jvm_gc_memory_promoted_bytes_total{application=\"$application\", instance=\"$instance\"}[1m])",
           "format": "time_series",
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "promoted",
           "refId": "B"
@@ -2785,6 +2804,7 @@
           },
           "expr": "jvm_classes_loaded_classes{application=\"$application\", instance=\"$instance\"}",
           "format": "time_series",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "loaded",
           "metric": "",
@@ -2821,7 +2841,7 @@
           "expr": "delta(jvm_classes_loaded_classes{application=\"$application\",instance=\"$instance\"}[1m])",
           "format": "time_series",
           "hide": false,
-          "interval": "",
+          "interval": "$interval",
           "intervalFactor": 1,
           "legendFormat": "delta-1m",
           "metric": "",
@@ -2873,6 +2893,7 @@
           },
           "expr": "jvm_buffer_memory_used_bytes{application=\"$application\", instance=\"$instance\", id=~\"$jvm_buffer_pool\"}",
           "format": "time_series",
+          "interval": "$interval",
           "intervalFactor": 2,
           "legendFormat": "used",
           "refId": "A"
@@ -2991,11 +3012,62 @@
         "regex": "",
         "sort": 1,
         "type": "query"
+      },
+      {
+        "auto": true,
+        "auto_count": 200,
+        "auto_min": "1s",
+        "current": {
+          "text": "1s",
+          "value": "1s"
+        },
+        "label": "Interval",
+        "name": "interval",
+        "options": [
+          {
+            "selected": true,
+            "text": "1s",
+            "value": "1s"
+          },
+          {
+            "selected": false,
+            "text": "5s",
+            "value": "5s"
+          },
+          {
+            "selected": false,
+            "text": "1m",
+            "value": "1m"
+          },
+          {
+            "selected": false,
+            "text": "5m",
+            "value": "5m"
+          },
+          {
+            "selected": false,
+            "text": "1h",
+            "value": "1h"
+          },
+          {
+            "selected": false,
+            "text": "6h",
+            "value": "6h"
+          },
+          {
+            "selected": false,
+            "text": "1d",
+            "value": "1d"
+          }
+        ],
+        "query": "1s,5s,1m,5m,1h,6h,1d",
+        "refresh": 2,
+        "type": "interval"
       }
     ]
   },
   "time": {
-    "from": "now-24h",
+    "from": "now-5m",
     "to": "now"
   },
   "timepicker": {},
