@@ -5,6 +5,7 @@ import kr.hhplus.be.server.api.user.application.port.in.UserPointHistoryDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointResult;
 import kr.hhplus.be.server.api.user.domain.entity.User;
+import kr.hhplus.be.server.api.user.domain.entity.UserPointHistory;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
 import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
 import kr.hhplus.be.server.exception.CustomException;
@@ -32,7 +33,7 @@ public class UserService {
 
 	@Transactional
 	public UserPointHistoryResult chargePoint(UserPointDto dto) {
-		User user = userRepository.findById(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+		User user = userRepository.findByIdWithLock(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
 		Instant transactionAt = timeProvider.now();
 		user.chargePoint(dto.point(), transactionAt);
@@ -42,7 +43,7 @@ public class UserService {
 
 	@Transactional
 	public UserPointHistoryResult usePoint(UserPointDto dto) {
-		User user = userRepository.findById(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
+		User user = userRepository.findByIdWithLock(dto.userId()).orElseThrow(() -> new CustomException(UserErrorCode.USER_NOT_FOUND));
 
 		Instant transactionAt = timeProvider.now();
 		user.usePoint(dto.point(), transactionAt);

@@ -55,7 +55,7 @@ public class ReservationServiceTest {
 		void 좌석_배정시간이_지난_예약_만료처리_성공() {
 			// given
 			List<Reservation> reservations = List.of(
-					ReservationFixture.createMock(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.createMock(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(Reservation.EXPIRE_SECONDS+1), null),
 					ReservationFixture.createMock( 2L, 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
 					ReservationFixture.createMock(3L, 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);
@@ -179,7 +179,7 @@ public class ReservationServiceTest {
 					ReservationStatus.WAITING,
 					timeProvider.now()
 			);
-			when(reservationRepository.findByIdWithLock(anyLong())).thenReturn(Optional.of(reservation));
+			when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(reservation));
 
 			Reservation afterReservation = ReservationFixture.createMock(
 					1L,
@@ -206,7 +206,7 @@ public class ReservationServiceTest {
 		@Test
 		void 존재하지_않는_예약() {
 			// given
-			when(reservationRepository.findByIdWithLock(anyLong())).thenReturn(Optional.empty());
+			when(reservationRepository.findById(anyLong())).thenReturn(Optional.empty());
 
 			ConfirmReservationDto dto = new ConfirmReservationDto(1L, timeProvider.now());
 

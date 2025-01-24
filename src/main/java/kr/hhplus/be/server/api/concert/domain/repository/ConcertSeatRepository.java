@@ -24,4 +24,6 @@ public interface ConcertSeatRepository extends JpaRepository<ConcertSeat, Long> 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT c FROM ConcertSeat c WHERE c.id = :id")
 	Optional<ConcertSeat> findByIdWithLock(@Param("id") long id);
+
+	List<ConcertSeat> findByConcertScheduleId(long concertScheduleId);
 }

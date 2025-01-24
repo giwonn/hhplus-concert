@@ -1,7 +1,17 @@
+
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS user_point_history;
+DROP TABLE IF EXISTS token;
+DROP TABLE IF EXISTS concert;
+DROP TABLE IF EXISTS concert_schedule;
+DROP TABLE IF EXISTS reservation;
+DROP TABLE IF EXISTS concert_seat;
+SET FOREIGN_KEY_CHECKS = 1;
+
 CREATE TABLE IF NOT EXISTS user (
   id bigint PRIMARY KEY AUTO_INCREMENT,
-  point bigint not null,
-  version bigint null
+  point bigint not null
 );
 
 CREATE TABLE IF NOT EXISTS user_point_history (
@@ -28,7 +38,6 @@ CREATE TABLE IF NOT EXISTS concert_schedule (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   concert_id bigint not null,
   concert_date date not null,
-  is_sold_out boolean default false,
   INDEX idx_concert_id (concert_id)
 );
 
@@ -38,7 +47,7 @@ CREATE TABLE IF NOT EXISTS concert_seat (
   seat_num int not null,
   amount bigint not null,
   is_reserved boolean default false,
-  version bigint null
+  version bigint not null default 0
 );
 
 CREATE TABLE IF NOT EXISTS reservation (
@@ -48,5 +57,6 @@ CREATE TABLE IF NOT EXISTS reservation (
   amount bigint not null,
   status varchar(30) not null,
   created_at timestamp not null,
-  paid_at timestamp
+  paid_at timestamp,
+  version bigint not null default 0
 );

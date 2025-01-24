@@ -16,10 +16,6 @@ import java.util.Optional;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
-	@Query("SELECT r FROM Reservation r WHERE r.id = :id")
-	Optional<Reservation> findByIdWithLock(long id);
-
-	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT r FROM Reservation r WHERE r.status = :status")
 	List<Reservation> findByStatusWithLock(ReservationStatus status);
 

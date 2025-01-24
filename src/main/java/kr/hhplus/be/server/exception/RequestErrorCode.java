@@ -10,7 +10,8 @@ public enum RequestErrorCode implements ErrorCode {
 	UNSUPPORTED_API_METHOD(HttpStatus.METHOD_NOT_ALLOWED, "UNSUPPORTED_API_METHOD", "지원하지 않는 API Method입니다."),
 	MISSING_PATH(HttpStatus.BAD_REQUEST, "MISSING_PATH", "request path가 누락되었습니다."),
 	INVALID_JSON(HttpStatus.BAD_REQUEST, "INVALID_JSON", "request body는 JSON 포맷이어야 합니다."),
-	INVALID_INPUT(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "입력값이 올바르지 않습니다.");
+	INVALID_INPUT(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "입력값이 올바르지 않습니다."),
+	FAIL_REQUEST(HttpStatus.BAD_REQUEST, "FAIL_REQUEST", "요청 실패");
 
 	private HttpStatus httpStatus;
 	private String code;

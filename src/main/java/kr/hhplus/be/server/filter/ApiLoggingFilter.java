@@ -4,22 +4,15 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
 @Slf4j
-public class ApiLoggingFilter implements Filter {
+public class ApiLoggingFilter extends OncePerRequestFilter {
 
 	@Override
-	public void init(FilterConfig filterConfig) {
-		log.info("{} init", this.getClass().getSimpleName());
-	}
-
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest httpRequest = (HttpServletRequest) request;
-		HttpServletResponse httpResponse = (HttpServletResponse) response;
-
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 		long startTime = System.currentTimeMillis();
 		try {
 			chain.doFilter(request, response);
@@ -27,16 +20,13 @@ public class ApiLoggingFilter implements Filter {
 			long endTime = System.currentTimeMillis();
 			long duration = endTime - startTime;
 
-			String method = httpRequest.getMethod();
-			String path = httpRequest.getRequestURI();
-			int status = httpResponse.getStatus();
+			String method = request.getMethod();
+			String path = request.getRequestURI();
+			int status = response.getStatus();
 
-			log.info("[{}] {} {} - {} ms", method, path, status, duration);
+			if (!(path.equals("/actuator/prometheus") && status == 200)) {
+				log.info("[{}] {} {} - {} ms", method, path, status, duration);
+			}
 		}
-	}
-
-	@Override
-	public void destroy() {
-		log.info("{} destroy", this.getClass().getSimpleName());
 	}
 }

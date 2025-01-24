@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(indexes = @Index(name = "idx_concert_id", columnList = "concert_id"))
@@ -20,19 +22,24 @@ public class ConcertSchedule {
 
 	private LocalDate concertDate;
 
-	private boolean isSoldOut;
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	@JoinColumn(name = "concertScheduleId")
+	private List<ConcertSeat> concertSeats = new ArrayList<>();
 
-	ConcertSchedule(long id, long concertId, LocalDate concertDate, boolean isSoldOut) {
+	ConcertSchedule(long id, long concertId, LocalDate concertDate, List<ConcertSeat> concertSeats) {
 		this.id = id;
 		this.concertId = concertId;
 		this.concertDate = concertDate;
-		this.isSoldOut = isSoldOut;
+		this.concertSeats = concertSeats;
 	}
 
-	ConcertSchedule(long concertId, LocalDate concertDate, boolean isSoldOut) {
+	ConcertSchedule(long concertId, LocalDate concertDate) {
 		this.concertId = concertId;
 		this.concertDate = concertDate;
-		this.isSoldOut = isSoldOut;
+	}
+
+	public boolean isAvailable() {
+		return concertSeats.stream().anyMatch(seat -> !seat.isReserved());
 	}
 
 }

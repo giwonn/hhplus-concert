@@ -22,14 +22,17 @@ spring:
       hibernate.jdbc.time_zone: UTC
 
 ---
-spring.config.activate.on-profile: local, test
+spring.config.activate.on-profile: local, test, load-test
 
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
     username: application
     password: application
-
+  data:
+    redis:
+      host: localhost
+      port: 6379
   sql:
     init:
       mode: always
@@ -38,6 +41,12 @@ queue:
   limit:
     active: 500
     delete: 1000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: prometheus
 
 ---
 spring.config.activate.on-profile: test
@@ -51,3 +60,13 @@ queue:
   limit:
     active: 5
     delete: 1
+
+---
+spring.config.activate.on-profile: load-test
+
+spring:
+  datasource:
+    url: jdbc:mysql://mysql:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
+  data:
+    redis:
+      host: redis

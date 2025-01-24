@@ -7,6 +7,7 @@ import kr.hhplus.be.server.api.reservation.application.ReservationService;
 import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
+import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.user.application.UserService;
@@ -37,9 +38,9 @@ public class ReservationFacade {
 		concertService.unReserveSeats(seatIds);
 	}
 
-	public ReservationResult reserve(CreateReservationDto dto) {
+	public ReservationResult reserve(ReserveSeatDto dto) {
 		return compensationProvider.handle(compensations -> {
-			ConcertSeatResult concertSeat = concertService.reserveSeat(dto.concertSeatId());
+			ConcertSeatResult concertSeat = concertService.reserveSeat(dto.seatId());
 			compensations.add(() -> concertService.unReserveSeat(concertSeat.id()));
 
 			CreateReservationDto reservationDto = new CreateReservationDto(

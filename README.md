@@ -10,6 +10,9 @@
 ### [API 명세서](https://allens-personal-organization.gitbook.io/hhplus/step6/api-docs)
 ### [API Swagger](./docs/swagger.md)
 
+## 성능 개선 및 고도화 보고서
+### [콘서트 예약 시스템에서의 동시성 문제 및 해결 방안](./docs/concurrency.md)
+
 ## 프로젝트
 
 ## Getting Started
@@ -24,3 +27,10 @@
 docker-compose up -d
 ```
 
+### 부하테스트
+```
+1. docker compose -f docker-compose.load-test.yml up -d // 부하테스트에 필요한 환경 세팅
+2. http://localhost:3000/login 접속 및 로그인 (ID: admin, PW: admin) // Grafana 로그인
+3. k6 Load Testing Results 대시보드 선택
+3. docker compose -f docker-compose.k6.yml run k6 // 부하테스트 실행
+```

@@ -1,11 +1,12 @@
 package kr.hhplus.be.server.api.reservation.presentation;
 
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
-import kr.hhplus.be.server.api.concert.domain.entity.TestConcertSeatFactory;
+import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeatFixture;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
+import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
@@ -64,7 +65,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		void 만료시간이_지난_예약은_취소되고_좌석배정은_해제된다() {
 			// when
 			final List<Reservation> tempReservations = List.of(
-					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(Reservation.EXPIRE_SECONDS+1), null),
 					ReservationFixture.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
 					ReservationFixture.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);
@@ -72,9 +73,9 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 
 
 			final List<ConcertSeat> tempConcertSeats = List.of(
-					TestConcertSeatFactory.create( 1L, 1, 1000L, true),
-					TestConcertSeatFactory.create( 2L, 1, 1000L, true),
-					TestConcertSeatFactory.create( 3L, 1, 1000L, true)
+					ConcertSeatFixture.create( 1L, 1, 1000L, true),
+					ConcertSeatFixture.create( 2L, 1, 1000L, true),
+					ConcertSeatFixture.create( 3L, 1, 1000L, true)
 			);
 			concertSeatRepository.saveAll(tempConcertSeats);
 
@@ -115,9 +116,9 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 성공() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(3L, 1, 1000L, false);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 4L, Date.valueOf("2024-10-01"));
 
 			// when
 			ReservationResult reservation = reservationFacade.reserve(dto);
@@ -132,9 +133,9 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 실패_이미_좌석이_예약됨() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 2, 1000L, true);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, true);
 			concertSeatRepository.save(concertSeat);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
@@ -144,11 +145,11 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 실패_동일한_좌석의_예약이_존재함() {
 			// given
-			ConcertSeat concertSeat = TestConcertSeatFactory.create(1L, 2, 1000L, false);
+			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, false);
 			concertSeatRepository.save(concertSeat);
 			Reservation testReservation = ReservationFixture.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))

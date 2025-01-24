@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.api.user.domain.entity;
 
 import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
-import kr.hhplus.be.server.common.provider.FixedTimeProvider;
+import kr.hhplus.be.server.provider.FixedTimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -82,7 +82,7 @@ public class UserTest {
 
 			UserPointHistory userPointHistory = user.userPointHistories.get(0);
 			assertThat(userPointHistory.getUserId()).isEqualTo(user.getId());
-			assertThat(userPointHistory.getAmount()).isEqualTo(1000);
+			assertThat(userPointHistory.getAmount()).isEqualTo(1000L);
 			assertThat(userPointHistory.getAction()).isEqualTo(UserPointAction.ROLLBACK);
 		}
 

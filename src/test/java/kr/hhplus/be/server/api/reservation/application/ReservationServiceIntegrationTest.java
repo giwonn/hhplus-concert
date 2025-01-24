@@ -41,7 +41,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 		void 만료시간이_이미_지난_예약만_처리된다() {
 			// given
 			final List<Reservation> reservations = List.of(
-					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(10), null),
+					ReservationFixture.create( 1L, 1L, 1000L, ReservationStatus.WAITING, timeProvider.now().minusSeconds(Reservation.EXPIRE_SECONDS+1), null),
 					ReservationFixture.create( 2L, 2L, 1000L, ReservationStatus.WAITING, timeProvider.now(), null),
 					ReservationFixture.create( 3L, 3L, 1000L, ReservationStatus.WAITING, timeProvider.now().plusSeconds(10), null)
 			);
@@ -74,7 +74,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 			// then
 			assertAll(() -> {
 				assertThat(sut.userId()).isEqualTo(dto.userId());
-				assertThat(sut.concertSeatId()).isEqualTo(dto.concertSeatId());
+				assertThat(sut.concertSeatId()).isEqualTo(dto.seatId());
 				assertThat(sut.amount()).isEqualTo(dto.amount());
 				assertThat(sut.status()).isEqualTo(ReservationStatus.WAITING);
 				assertThat(sut.expiredAt()).isEqualTo(timeProvider.now().plusSeconds(Reservation.EXPIRE_SECONDS));

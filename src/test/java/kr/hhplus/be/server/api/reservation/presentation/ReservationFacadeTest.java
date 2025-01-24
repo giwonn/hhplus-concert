@@ -6,13 +6,14 @@ import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.reservation.application.ReservationService;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
+import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.user.application.UserService;
 import kr.hhplus.be.server.api.user.application.port.in.UserPointDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
-import kr.hhplus.be.server.common.provider.FixedTimeProvider;
+import kr.hhplus.be.server.provider.FixedTimeProvider;
 import kr.hhplus.be.server.provider.CompensationProvider;
 import kr.hhplus.be.server.provider.CompensationProviderFixture;
 import org.junit.jupiter.api.Nested;
@@ -82,7 +83,7 @@ public class ReservationFacadeTest {
 			ConcertSeatResult concertSeatResult = new ConcertSeatResult(1L, 1L, 1, 1000L, true);
 			when(concertService.reserveSeat(anyLong())).thenReturn(concertSeatResult);
 
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
 			ReservationResult reservationResult = new ReservationResult(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, Instant.now(), null);
 			when(reservationService.reserve(any(CreateReservationDto.class))).thenReturn(reservationResult);
 

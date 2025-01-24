@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.api.concert.application;
 
+import kr.hhplus.be.server.annotation.simplelock.SimpleLock;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResult;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
@@ -29,7 +30,7 @@ public class ConcertService {
 	@Transactional(readOnly = true)
 	public List<ConcertScheduleResult> getReservableSchedules(Long concertId) {
 		List<ConcertSchedule> concertSchedules = concertScheduleRepository.findByConcertId(concertId);
-		return concertSchedules.stream().filter(schedule -> !schedule.isSoldOut()).map(ConcertScheduleResult::from).toList();
+		return concertSchedules.stream().filter(ConcertSchedule::isAvailable).map(ConcertScheduleResult::from).toList();
 	}
 
 	@Transactional(readOnly = true)
@@ -40,6 +41,7 @@ public class ConcertService {
 				.toList();
 	}
 
+	@SimpleLock(key = "'seatId:' + #seatId")
 	@Transactional
 	public ConcertSeatResult reserveSeat(long seatId) {
 		ConcertSeat seat = concertSeatRepository.findById(seatId)
@@ -50,9 +52,8 @@ public class ConcertService {
 
 		// 좌석 예약 발급
 		seat.reserve();
-		ConcertSeat reservedSeat = concertSeatRepository.save(seat);
 
-		return ConcertSeatResult.from(reservedSeat);
+		return ConcertSeatResult.from(seat);
 	}
 
 	@Transactional
@@ -62,6 +63,6 @@ public class ConcertService {
 
 		seat.unReserve();
 
-		return ConcertSeatResult.from(concertSeatRepository.save(seat));
+		return ConcertSeatResult.from(seat);
 	}
 }

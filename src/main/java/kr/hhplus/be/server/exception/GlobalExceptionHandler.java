@@ -1,7 +1,9 @@
 package kr.hhplus.be.server.exception;
 
+import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConversionException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -19,9 +21,15 @@ import java.util.List;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ErrorResponse<Void>> handleException(Exception e) {
+		log.warn("[Exception] Code: {}, Reason: {}", 500, e.getMessage(), e);
+		return ResponseEntity.status(500).body(new ErrorResponse<>("500", e.getMessage(), null));
+	}
+
 	@ExceptionHandler(CustomException.class)
 	public ResponseEntity<ErrorResponse<Void>> handleCustomException(CustomException e) {
-		log.warn("[Exception] Code: {}, Reason: {}", e.getCode(), e.getReason(), e);
+		log.warn("[CustomException] Code: {}, Reason: {}", e.getCode(), e.getReason());
 		return ResponseEntity.status(e.getHttpStatus()).body(ErrorResponse.from(e));
 	}
 
@@ -79,5 +87,11 @@ public class GlobalExceptionHandler {
 				.map(error -> new ErrorResponse.Detail(error.getField(), error.getDefaultMessage()))
 				.toList();
 		return ResponseEntity.badRequest().body(ErrorResponse.from(RequestErrorCode.INVALID_INPUT, details));
+	}
+
+	@ExceptionHandler(OptimisticLockingFailureException.class)
+	public ResponseEntity<ErrorResponse<ErrorResponse.Detail>> handleOptimisticLockException(OptimisticLockingFailureException e) {
+		return ResponseEntity.status(RequestErrorCode.FAIL_REQUEST.getHttpStatus())
+				.body(ErrorResponse.from(RequestErrorCode.FAIL_REQUEST, null));
 	}
 }

@@ -1,16 +1,14 @@
 package kr.hhplus.be.server.config;
 
-import jakarta.servlet.Filter;
 import kr.hhplus.be.server.api.token.presentation.interceptor.ExpireQueueInterceptor;
 import kr.hhplus.be.server.api.token.presentation.interceptor.QueueValidationInterceptor;
-import kr.hhplus.be.server.filter.ApiLoggingFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+@Profile("!load-test") // TODO : 대기열 없이 부하테스트 진행하기 위해 임시로 비활성화함. 추후 대기열 개선하여 해당 설정 제거 예정
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
@@ -26,15 +24,5 @@ public class WebConfig implements WebMvcConfigurer {
 		registry.addInterceptor(expireQueueInterceptor)
 				.addPathPatterns("/reservations/payments");
 
-	}
-
-	@Bean
-	public FilterRegistrationBean<Filter> logFilter() {
-		FilterRegistrationBean<Filter> filterRegistrationBean = new FilterRegistrationBean<>();
-		filterRegistrationBean.setFilter(new ApiLoggingFilter());
-		filterRegistrationBean.setOrder(1);
-		filterRegistrationBean.addUrlPatterns("/*");
-
-		return filterRegistrationBean;
 	}
 }

@@ -1,7 +1,6 @@
 package kr.hhplus.be.server.api.reservation.presentation;
 
 import jakarta.validation.Valid;
-import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
@@ -16,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @RestController
 @RequestMapping("/reservation")

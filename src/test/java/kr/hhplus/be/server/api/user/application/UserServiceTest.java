@@ -7,7 +7,7 @@ import kr.hhplus.be.server.api.user.application.port.out.UserPointResult;
 import kr.hhplus.be.server.api.user.domain.entity.*;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
 import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
-import kr.hhplus.be.server.common.provider.FixedTimeProvider;
+import kr.hhplus.be.server.provider.FixedTimeProvider;
 import kr.hhplus.be.server.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -70,7 +70,7 @@ public class UserServiceTest {
 		void 성공() {
 			// given
 			long userId = 1L;
-			when(userRepository.findById(userId)).thenReturn(Optional.of(UserFixture.createMock(userId, 3000)));
+			when(userRepository.findByIdWithLock(userId)).thenReturn(Optional.of(UserFixture.createMock(userId, 3000)));
 			when(timeProvider.now()).thenReturn(FixedTimeProvider.FIXED_TIME);
 
 			UserPointDto dto = new UserPointDto(userId, 1000);
@@ -88,7 +88,7 @@ public class UserServiceTest {
 		void 실패_존재하지_않는_유저() {
 			// given
 			long userId = 1L;
-			when(userRepository.findById(userId)).thenReturn(Optional.empty());
+			when(userRepository.findByIdWithLock(userId)).thenReturn(Optional.empty());
 
 			UserPointDto dto = new UserPointDto(userId, 1000);
 
@@ -105,7 +105,7 @@ public class UserServiceTest {
 		void 성공() {
 			// given
 			long userId = 1L;
-			when(userRepository.findById(userId)).thenReturn(Optional.of(UserFixture.createMock(userId, 3000)));
+			when(userRepository.findByIdWithLock(userId)).thenReturn(Optional.of(UserFixture.createMock(userId, 3000)));
 			when(timeProvider.now()).thenReturn(FixedTimeProvider.FIXED_TIME);
 
 			UserPointDto dto = new UserPointDto(userId, 1000);
@@ -123,7 +123,7 @@ public class UserServiceTest {
 		void 실패_존재하지_않는_유저() {
 			// given
 			long userId = 1L;
-			when(userRepository.findById(userId)).thenReturn(Optional.empty());
+			when(userRepository.findByIdWithLock(userId)).thenReturn(Optional.empty());
 
 			UserPointDto dto = new UserPointDto(userId, 1000);
 

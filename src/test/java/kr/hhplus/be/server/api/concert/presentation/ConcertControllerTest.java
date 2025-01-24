@@ -29,7 +29,7 @@ class ConcertControllerTest extends BaseControllerTest {
 
 		@Test
 		void 성공() throws Exception {
-			ConcertScheduleResult result = new ConcertScheduleResult(1L, 1L, LocalDate.parse("2024-01-01"), false);
+			ConcertScheduleResult result = new ConcertScheduleResult(1L, 1L, LocalDate.parse("2024-01-01"));
 			when(concertService.getReservableSchedules(anyLong())).thenReturn(List.of(result));
 
 			mockMvc.perform(get("/concerts/{concertId}/available-dates", 1)

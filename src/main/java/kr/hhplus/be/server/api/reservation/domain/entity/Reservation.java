@@ -1,9 +1,10 @@
 package kr.hhplus.be.server.api.reservation.domain.entity;
 
 import jakarta.persistence.*;
+import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
+import kr.hhplus.be.server.exception.CustomException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.Instant;
 
@@ -24,13 +25,16 @@ public class Reservation {
 
 	private long amount;
 
-	@Setter
 	@Enumerated(EnumType.STRING)
 	private ReservationStatus status;
 
 	private Instant createdAt;
 
 	private Instant paidAt;
+
+	@Version
+	private long version;
+
 
 	Reservation(long id, long concertSeatId, long userId, long amount, ReservationStatus status, Instant createdAt, Instant paidAt) {
 		this.id = id;
@@ -57,6 +61,19 @@ public class Reservation {
 
 	public void addPaymentTime(Instant paymentTime) {
 		this.paidAt = paymentTime;
+	}
+
+	public void confirm(Instant transactionAt) {
+		if (this.status != ReservationStatus.WAITING) {
+			throw new CustomException(ReservationErrorCode.NOT_WAITING_RESERVATION);
+		}
+
+		status = ReservationStatus.CONFIRMED;
+		this.paidAt = transactionAt;
+	}
+
+	public Instant getExpiredAt() {
+		return createdAt.plusSeconds(EXPIRE_SECONDS);
 	}
 
 }
