@@ -1,10 +1,8 @@
 package kr.hhplus.be.server;
 
+import com.redis.testcontainers.RedisContainer;
 import jakarta.annotation.PreDestroy;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
@@ -12,7 +10,7 @@ import org.testcontainers.utility.DockerImageName;
 class TestcontainersConfiguration {
 
 	public static final MySQLContainer<?> MYSQL_CONTAINER;
-	private static final GenericContainer<?> REDIS_CONTAINER;
+	private static final RedisContainer REDIS_CONTAINER;
 
 	static {
 		MYSQL_CONTAINER = new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
@@ -26,19 +24,11 @@ class TestcontainersConfiguration {
 		System.setProperty("spring.datasource.username", MYSQL_CONTAINER.getUsername());
 		System.setProperty("spring.datasource.password", MYSQL_CONTAINER.getPassword());
 
-		REDIS_CONTAINER = new GenericContainer<>(DockerImageName.parse("redis:7.4.2"))
-				.withExposedPorts(6379);
+		REDIS_CONTAINER = new RedisContainer(DockerImageName.parse("redis:7.4.2"));
 		REDIS_CONTAINER.start();
 
-	}
-
-	@DynamicPropertySource
-	static void registerRedisProperties(DynamicPropertyRegistry registry) {
-		String redisHost = REDIS_CONTAINER.getHost();
-		Integer redisPort = REDIS_CONTAINER.getFirstMappedPort();
-
-		registry.add("spring.data.redis.host", () -> redisHost);
-		registry.add("spring.data.redis.port", () -> redisPort);
+		System.setProperty("spring.data.redis.host", REDIS_CONTAINER.getHost());
+		System.setProperty("spring.data.redis.port", REDIS_CONTAINER.getFirstMappedPort().toString());
 	}
 
 	@PreDestroy

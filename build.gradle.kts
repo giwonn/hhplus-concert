@@ -36,9 +36,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.7.0")
-	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
 
 	// Custom
@@ -49,12 +47,16 @@ dependencies {
 
 	// DB
 	runtimeOnly("com.mysql:mysql-connector-j")
+	testImplementation("org.testcontainers:mysql")
+
+	// Redis
+	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
+	testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
 
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
-	testImplementation("org.testcontainers:mysql")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

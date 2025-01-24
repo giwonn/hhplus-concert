@@ -4,7 +4,6 @@ import kr.hhplus.be.server.util.DatabaseCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.redisson.api.RScript;
 import org.redisson.api.RedissonClient;
-import org.redisson.api.redisnode.RedisNodes;
 import org.redisson.client.codec.StringCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
