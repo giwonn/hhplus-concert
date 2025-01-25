@@ -20,6 +20,7 @@ class SeatReservationUsecase {
 class ConcertService {
   private final SeatRepository seatRepository;
 
+  @Transactional
   public void reserveSeat(int seatId) {
     Seat seat = seatRepository.findById(seatId);
     if (seat.isReserved()) throw new RuntimeException("이미 예약된 좌석입니다.");
@@ -30,6 +31,7 @@ class ConcertService {
 class ReservationService {
   private final ReservationRepository reservationRepository;
 
+  @Transactional
   public void create(int seatId) {
     Reservation reservation = new Reservation(seatId);
     reservationRepository.save(reservation);
