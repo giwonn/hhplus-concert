@@ -9,6 +9,7 @@ import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleReposito
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
 import kr.hhplus.be.server.exception.CustomException;
+import kr.hhplus.be.server.provider.lock.LockResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,7 +42,7 @@ public class ConcertService {
 				.toList();
 	}
 
-	@SimpleLock(key = "'seatId:' + #seatId")
+	@SimpleLock(resource = LockResource.SEAT, key = "#seatId")
 	@Transactional
 	public ConcertSeatResult reserveSeat(long seatId) {
 		ConcertSeat seat = concertSeatRepository.findById(seatId)
