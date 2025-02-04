@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.token.domain.entity;
 
-import kr.hhplus.be.server.provider.TimeProvider;
+import kr.hhplus.be.server.core.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

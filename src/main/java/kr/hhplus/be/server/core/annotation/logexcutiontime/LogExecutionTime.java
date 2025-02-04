@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.annotation.logexcutiontime;
+package kr.hhplus.be.server.core.annotation.logexcutiontime;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

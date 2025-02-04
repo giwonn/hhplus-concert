@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.provider.lock;
+package kr.hhplus.be.server.core.provider.lock;
 
-import kr.hhplus.be.server.exception.CustomException;
-import kr.hhplus.be.server.exception.RequestErrorCode;
+import kr.hhplus.be.server.core.exception.CustomException;
+import kr.hhplus.be.server.core.exception.RequestErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;

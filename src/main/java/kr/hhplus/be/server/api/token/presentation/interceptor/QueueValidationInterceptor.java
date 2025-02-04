@@ -8,7 +8,7 @@ import kr.hhplus.be.server.api.token.exception.TokenErrorCode;
 import kr.hhplus.be.server.api.token.application.TokenService;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
 import kr.hhplus.be.server.api.token.presentation.port.out.QueueTokenResponse;
-import kr.hhplus.be.server.exception.CustomException;
+import kr.hhplus.be.server.core.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;

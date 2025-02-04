@@ -1,7 +1,7 @@
-package kr.hhplus.be.server.config;
+package kr.hhplus.be.server.core.config;
 
 import jakarta.servlet.Filter;
-import kr.hhplus.be.server.filter.ApiLoggingFilter;
+import kr.hhplus.be.server.core.filter.ApiLoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;

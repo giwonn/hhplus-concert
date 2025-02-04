@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.provider;
+package kr.hhplus.be.server.core.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class CompensationProvider {
 	public static class CompensationStack {
 		private final Deque<Runnable> tasks = new ArrayDeque<>();
 
-		CompensationStack() {}
+		public CompensationStack() {}
 
 		public void add(Runnable task) {
 			tasks.push(task);

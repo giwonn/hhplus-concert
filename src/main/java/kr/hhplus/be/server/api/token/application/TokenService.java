@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.token.application;
 
-import kr.hhplus.be.server.annotation.logexcutiontime.LogExecutionTime;
+import kr.hhplus.be.server.core.annotation.logexcutiontime.LogExecutionTime;
 import kr.hhplus.be.server.api.token.application.port.in.QueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.in.SignQueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
@@ -8,9 +8,9 @@ import kr.hhplus.be.server.api.token.domain.entity.Token;
 import kr.hhplus.be.server.api.token.domain.entity.TokenFactory;
 import kr.hhplus.be.server.api.token.domain.repository.TokenRepository;
 import kr.hhplus.be.server.api.token.exception.TokenErrorCode;
-import kr.hhplus.be.server.exception.CommonErrorCode;
-import kr.hhplus.be.server.exception.CustomException;
-import kr.hhplus.be.server.provider.TimeProvider;
+import kr.hhplus.be.server.core.exception.CommonErrorCode;
+import kr.hhplus.be.server.core.exception.CustomException;
+import kr.hhplus.be.server.core.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.env.Environment;

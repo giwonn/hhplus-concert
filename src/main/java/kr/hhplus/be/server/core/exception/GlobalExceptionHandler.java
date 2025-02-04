@@ -1,6 +1,5 @@
-package kr.hhplus.be.server.exception;
+package kr.hhplus.be.server.core.exception;
 
-import jakarta.persistence.OptimisticLockException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.OptimisticLockingFailureException;

@@ -2,7 +2,7 @@ package kr.hhplus.be.server.api.user.domain.entity;
 
 import jakarta.persistence.*;
 import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
-import kr.hhplus.be.server.exception.CustomException;
+import kr.hhplus.be.server.core.exception.CustomException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

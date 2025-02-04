@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.annotation.logexcutiontime;
+package kr.hhplus.be.server.core.annotation.logexcutiontime;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogExecutionTimeAspect {
 
-	@Around("@annotation(LogExecutionTime)")
+	@Around("@annotation(kr.hhplus.be.server.core.annotation.logexcutiontime.LogExecutionTime)")
 	public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
 		long startTime = System.currentTimeMillis();
 		boolean isSuccess = true;

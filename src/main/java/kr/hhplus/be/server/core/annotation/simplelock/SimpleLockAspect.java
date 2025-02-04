@@ -1,9 +1,9 @@
-package kr.hhplus.be.server.annotation.simplelock;
+package kr.hhplus.be.server.core.annotation.simplelock;
 
-import kr.hhplus.be.server.exception.CustomException;
-import kr.hhplus.be.server.exception.RequestErrorCode;
-import kr.hhplus.be.server.library.SpringELParser;
-import kr.hhplus.be.server.provider.lock.LockProvider;
+import kr.hhplus.be.server.core.exception.CustomException;
+import kr.hhplus.be.server.core.exception.RequestErrorCode;
+import kr.hhplus.be.server.core.library.SpringELParser;
+import kr.hhplus.be.server.core.provider.lock.LockProvider;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;

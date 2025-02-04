@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.provider.lock;
+package kr.hhplus.be.server.core.provider.lock;
 
 import lombok.RequiredArgsConstructor;
 

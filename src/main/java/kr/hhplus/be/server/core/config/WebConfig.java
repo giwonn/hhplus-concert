@@ -1,4 +1,4 @@
-package kr.hhplus.be.server.config;
+package kr.hhplus.be.server.core.config;
 
 import kr.hhplus.be.server.api.token.presentation.interceptor.ExpireQueueInterceptor;
 import kr.hhplus.be.server.api.token.presentation.interceptor.QueueValidationInterceptor;

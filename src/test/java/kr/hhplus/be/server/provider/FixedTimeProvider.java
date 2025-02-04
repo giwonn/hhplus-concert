@@ -1,5 +1,7 @@
 package kr.hhplus.be.server.provider;
 
+import kr.hhplus.be.server.core.provider.TimeProvider;
+
 import java.time.Clock;
 import java.time.Instant;
 

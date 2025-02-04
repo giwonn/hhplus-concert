@@ -1,6 +1,6 @@
-package kr.hhplus.be.server.annotation.simplelock;
+package kr.hhplus.be.server.core.annotation.simplelock;
 
-import kr.hhplus.be.server.provider.lock.LockResource;
+import kr.hhplus.be.server.core.provider.lock.LockResource;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

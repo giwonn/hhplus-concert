@@ -9,7 +9,7 @@ import kr.hhplus.be.server.base.BaseIntegrationTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
 import kr.hhplus.be.server.api.token.application.port.in.SignQueueTokenDto;
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
-import kr.hhplus.be.server.provider.TimeProvider;
+import kr.hhplus.be.server.core.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

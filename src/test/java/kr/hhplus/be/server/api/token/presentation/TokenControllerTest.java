@@ -2,7 +2,7 @@ package kr.hhplus.be.server.api.token.presentation;
 
 import kr.hhplus.be.server.api.token.application.port.out.QueueTokenResult;
 import kr.hhplus.be.server.base.BaseControllerTest;
-import kr.hhplus.be.server.exception.RequestErrorCode;
+import kr.hhplus.be.server.core.exception.RequestErrorCode;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;

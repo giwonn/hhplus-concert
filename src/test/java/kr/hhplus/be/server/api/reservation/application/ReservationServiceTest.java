@@ -8,7 +8,7 @@ import kr.hhplus.be.server.api.reservation.domain.repository.ReservationReposito
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
 import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
-import kr.hhplus.be.server.provider.TimeProvider;
+import kr.hhplus.be.server.core.provider.TimeProvider;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

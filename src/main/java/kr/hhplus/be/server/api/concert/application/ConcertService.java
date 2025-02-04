@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.concert.application;
 
-import kr.hhplus.be.server.annotation.simplelock.SimpleLock;
+import kr.hhplus.be.server.core.annotation.simplelock.SimpleLock;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResult;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSchedule;
@@ -8,8 +8,8 @@ import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertScheduleRepository;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
-import kr.hhplus.be.server.exception.CustomException;
-import kr.hhplus.be.server.provider.lock.LockResource;
+import kr.hhplus.be.server.core.exception.CustomException;
+import kr.hhplus.be.server.core.provider.lock.LockResource;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

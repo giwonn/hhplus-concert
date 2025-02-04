@@ -8,7 +8,7 @@ import kr.hhplus.be.server.api.user.domain.entity.*;
 import kr.hhplus.be.server.api.user.domain.repository.UserRepository;
 import kr.hhplus.be.server.api.user.domain.exception.UserErrorCode;
 import kr.hhplus.be.server.provider.FixedTimeProvider;
-import kr.hhplus.be.server.provider.TimeProvider;
+import kr.hhplus.be.server.core.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
