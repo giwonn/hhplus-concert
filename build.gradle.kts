@@ -47,6 +47,7 @@ dependencies {
 	testImplementation("org.testcontainers:mysql")
 
 	// Redis
+	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
 	testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
 

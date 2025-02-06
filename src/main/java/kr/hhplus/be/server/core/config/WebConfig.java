@@ -1,7 +1,7 @@
 package kr.hhplus.be.server.core.config;
 
-import kr.hhplus.be.server.api.token.presentation.interceptor.ExpireQueueInterceptor;
-import kr.hhplus.be.server.api.token.presentation.interceptor.QueueValidationInterceptor;
+import kr.hhplus.be.server.api.queue.presentation.interceptor.ExpireQueueInterceptor;
+import kr.hhplus.be.server.api.queue.presentation.interceptor.QueueValidationInterceptor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
