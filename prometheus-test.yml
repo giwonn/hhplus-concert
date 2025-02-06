@@ -12,6 +12,10 @@ scrape_configs:
     static_configs:
       - targets: ["host.docker.internal:9104"]
 
+  - job_name: "redis"
+    static_configs:
+      - targets: ["redis-exporter:9121"]
+
   - job_name: "java_application"
     metrics_path: '/actuator/prometheus'
     static_configs:
