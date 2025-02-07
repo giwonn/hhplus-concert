@@ -9,7 +9,7 @@
 
 ### Application Cache
 CPU가 캐시를 사용하는 방식와 거의 동일하다.  
-비교적 빠르고 가까운 메모리를 먼저 탐색하고나서 DB를 탐색한다.
+비교적 빠르고 가까운 메모리를 먼저 탐색하고나서 DB를 탐색한다.  
 ![application_cache](images/cache/application_cache.png)
 
 
