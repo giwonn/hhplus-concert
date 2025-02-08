@@ -2,7 +2,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS user_point_history;
-DROP TABLE IF EXISTS token;
 DROP TABLE IF EXISTS concert;
 DROP TABLE IF EXISTS concert_schedule;
 DROP TABLE IF EXISTS reservation;
@@ -21,13 +20,6 @@ CREATE TABLE IF NOT EXISTS user_point_history (
   amount bigint not null,
   transaction_at timestamp,
   CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS token (
-  id bigint PRIMARY KEY AUTO_INCREMENT,
-  user_id bigint not null,
-  is_queue_passed boolean not null default false,
-  expired_at timestamp
 );
 
 CREATE TABLE IF NOT EXISTS concert (

@@ -40,7 +40,6 @@ spring:
 queue:
   limit:
     active: 500
-    delete: 1000
 
 management:
   endpoints:
@@ -59,7 +58,6 @@ spring:
 queue:
   limit:
     active: 5
-    delete: 1
 
 ---
 spring.config.activate.on-profile: load-test

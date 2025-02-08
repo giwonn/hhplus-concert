@@ -6,5 +6,6 @@ services:
         - "6565:6565"
     volumes:
       - ./k6:/scripts
-    command: run --out influxdb=http://localhost:8086/hhplus /scripts/script.js
+    working_dir: /scripts
+    entrypoint: [ "k6", "run", "--out", "influxdb=http://localhost:8086/hhplus" ]
     network_mode: host

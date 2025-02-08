@@ -33,8 +33,8 @@ docker-compose up -d
 
 ### 부하테스트
 ```
-1. docker compose -f docker-compose.load-test.yml up -d // 부하테스트에 필요한 환경 세팅
+1. docker compose -f docker-compose.load-test.yml up --build -d // 부하테스트에 필요한 환경 세팅
 2. http://localhost:3000/login 접속 및 로그인 (ID: admin, PW: admin) // Grafana 로그인
 3. k6 Load Testing Results 대시보드 선택
-3. docker compose -f docker-compose.k6.yml run k6 // 부하테스트 실행
+3. docker compose -f docker-compose.k6.yml run --rm k6 -- waiting-queue.js // 대기열 부하테스트 실행
 ```
