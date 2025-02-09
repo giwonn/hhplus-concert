@@ -1,6 +1,5 @@
 package kr.hhplus.be.server.api.reservation.presentation;
 
-import kr.hhplus.be.server.core.annotation.logexcutiontime.LogExecutionTime;
 import kr.hhplus.be.server.api.concert.application.ConcertService;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import kr.hhplus.be.server.api.reservation.application.ReservationService;
@@ -16,7 +15,6 @@ import kr.hhplus.be.server.api.user.application.port.in.UserPointHistoryDto;
 import kr.hhplus.be.server.api.user.application.port.out.UserPointHistoryResult;
 import kr.hhplus.be.server.core.provider.CompensationProvider;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -30,8 +28,6 @@ public class ReservationFacade {
 	private final UserService userService;
 	private final CompensationProvider compensationProvider;
 
-	@Scheduled(cron = "0 * * * * *")
-	@LogExecutionTime
 	public void expireReservations() {
 		List<ReservationResult> expiredReservations = reservationService.expireReservations();
 		List<Long> seatIds = expiredReservations.stream().map(ReservationResult::concertSeatId).toList();
