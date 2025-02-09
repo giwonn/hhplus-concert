@@ -11,9 +11,6 @@ export const options = {
   ],
 };
 
-const successCount = new Counter("success_count");
-const failCount = new Counter("fail_count");
-
 export default () => {
   const url = "http://host.docker.internal:8080/queue/tokens";
   const payload = JSON.stringify({ userId: 1 });

@@ -1,5 +1,7 @@
-import http from "k6/http";
-import { check } from "k6";
+
+import { signToken } from './api/signToken.js';
+import { seatReservation } from './api/seatReservation.js';
+import { Counter } from 'k6/metrics';
 
 export const options = {
   scenarios: {
@@ -13,39 +15,17 @@ export const options = {
   },
 };
 
-export default () => {
+const successCount = new Counter('Z_success_seat_reservation');
+const failureCount = new Counter('Z_fail_seat_reservation');
+
+export default async () => {
   const userId = __VU;  // VU 번호를 userId로 사용
-  signToken(userId);
-  concertSeat(userId);
-}
+  const queueToken = signToken(userId);
 
-const signToken = (userId) => {
-  const url = "http://host.docker.internal:8080/queue/tokens";
-  const payload = JSON.stringify({ userId });
-  const params = {
-    headers: {
-      "Content-Type": "application/json",
-    }
-  };
-  const response = http.post(url, payload, params);
-  check(response, { "status is 200": (r) => r.status === 200 });
-}
-
-const concertSeat = (userId) => {
-  const url = "http://host.docker.internal:8080/reservation/concerts";
-  const payload = JSON.stringify({
-    concertId: 1,
-    seatId: Math.floor(Math.random() * 20) + 1,
-    userId,
-    amount: 1000,
-    date: "2025-01-01"
-  });
-  const params = {
-    headers: {
-      "Content-Type": "application/json",
-      "X-Waiting-Token": JSON.stringify({ userId })
-    }
-  };
-  const response = http.post(url, payload, params);
-  check(response, { "status is 200 or 400": (r) => r.status === 200 || r.status === 400 });
+  const resp = await seatReservation(userId, queueToken);
+  if (resp.status === 200) {
+    successCount.add(1);
+  } else {
+    failureCount.add(1);
+  }
 }
