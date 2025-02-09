@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(indexes = @Index(name = "idx_concert_id", columnList = "concert_id"))
 @Getter
 @NoArgsConstructor
 public class ConcertSchedule {

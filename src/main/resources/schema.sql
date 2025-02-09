@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS user_point_history (
   action varchar(30) not null,
   amount bigint not null,
   transaction_at timestamp,
-  CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+  CONSTRAINT fk_user_point_history_user_id FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS concert (
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS concert_schedule (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   concert_id bigint not null,
   concert_date date not null,
-  INDEX idx_concert_id (concert_id)
+  INDEX idx_concert_schedule_concert_id (concert_id)
 );
 
 CREATE TABLE IF NOT EXISTS concert_seat (
@@ -50,5 +50,6 @@ CREATE TABLE IF NOT EXISTS reservation (
   status varchar(30) not null,
   created_at timestamp not null,
   paid_at timestamp,
-  version bigint not null default 0
+  version bigint not null default 0,
+  INDEX idx_reservation_user_id (user_id)
 );
