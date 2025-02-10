@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS concert_schedule (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   concert_id bigint not null,
   concert_date date not null,
-  INDEX idx_concert_schedule_concert_id (concert_id)
+  UNIQUE KEY uk_concert_id_date (concert_id, concert_date)
 );
 
 CREATE TABLE IF NOT EXISTS concert_seat (
@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS concert_seat (
   seat_num int not null,
   amount bigint not null,
   is_reserved boolean default false,
-  version bigint not null default 0
+  version bigint not null default 0,
+  UNIQUE KEY uk_concert_seat_schedule_seat_num (concert_schedule_id, seat_num)
 );
 
 CREATE TABLE IF NOT EXISTS reservation (
