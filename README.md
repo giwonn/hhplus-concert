@@ -38,3 +38,11 @@ docker-compose up -d
 3. k6 Load Testing Results 대시보드 선택
 3. docker compose -f docker-compose.k6.yml run --rm k6 -- waiting-queue.js // 대기열 부하테스트 실행
 ```
+
+### 인덱스 테스트 환경 세팅
+[sql 다운로드 링크](https://drive.google.com/file/d/1py594B4w0AlziW2AnSyEJN0egcrqyVcV/view?usp=sharing)
+```
+1. 다운로드한 sql파일 프로젝트 최상단으로 이동
+2. gzip -dk mysql-backup.sql.gz // 덤프 압축 해제
+3. docker compose -f docker-compose.index-test.yml up --build -d
+```
