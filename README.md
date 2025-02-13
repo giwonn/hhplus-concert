@@ -16,6 +16,7 @@
 
 ## 개념 정리
 ### [Cache](./docs/cache.md)
+### [MSA 전환시 분산 트랜잭션 전략](./docs/msa-architecture-improvement.md)
 
 ## 프로젝트
 
