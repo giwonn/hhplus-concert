@@ -45,7 +45,6 @@ public interface ConcertAPI {
 	})
 	ResponseEntity<AvailableConcertSeatsResponse> availableSeats(
 			@PathVariable("concertId") long concertId,
-			@PathVariable("concertScheduleId") long concertScheduleId,
-			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
+			@PathVariable("concertScheduleId") long concertScheduleId
 	);
 }

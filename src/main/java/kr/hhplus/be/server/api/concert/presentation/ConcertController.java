@@ -32,8 +32,7 @@ public class ConcertController implements ConcertAPI {
 	@GetMapping(path = "/{concertId}/schedules/{concertScheduleId}/available-seats")
 	public ResponseEntity<AvailableConcertSeatsResponse> availableSeats(
 			@PathVariable("concertId") long concertId,
-			@PathVariable("concertScheduleId") long concertScheduleId,
-			@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date
+			@PathVariable("concertScheduleId") long concertScheduleId
 	) {
 		List<ConcertSeatResult> result = concertService.getReservableSeats(concertScheduleId);
 		return ResponseEntity.ok(new AvailableConcertSeatsResponse(result));

@@ -3,7 +3,7 @@ package kr.hhplus.be.server.api.concert.presentation.port.out;
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertScheduleResult;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public record AvailableConcertSchedulesResponse(
@@ -21,6 +21,6 @@ public record AvailableConcertSchedulesResponse(
 
 	public record Schedule(
 			long concertId,
-			LocalDate concertDate
+			LocalDateTime concertDate
 	) {}
 }

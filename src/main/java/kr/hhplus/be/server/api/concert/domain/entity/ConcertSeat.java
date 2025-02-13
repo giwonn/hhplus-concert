@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(uniqueConstraints = {
+		@UniqueConstraint(name = "uk_schedule_id_seat_num", columnNames = { "concert_schedule_id", "seat_num" })
+})
 @Getter
 @NoArgsConstructor
 public class ConcertSeat {
@@ -46,4 +49,5 @@ public class ConcertSeat {
 	public void unReserve() {
 		this.isReserved = false;
 	}
+
 }

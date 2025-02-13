@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +65,7 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 		void 성공() {
 			// given
 			final List<ConcertSchedule> concertSchedules = List.of(
-					ConcertScheduleFixture.create(1L, LocalDate.parse("2025-01-01"))
+					ConcertScheduleFixture.create(1L, LocalDateTime.parse("2025-01-01T12:00"))
 			);
 			concertScheduleRepository.saveAll(concertSchedules);
 
