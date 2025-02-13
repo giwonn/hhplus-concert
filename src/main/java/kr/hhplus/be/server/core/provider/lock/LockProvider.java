@@ -19,11 +19,11 @@ public class LockProvider {
 
 	private final RedissonClient redissonClient;
 
-	private final String LOCK_PREFIX = "lock";
+	private final String LOCK_PREFIX = "lock:";
 
 	public Optional<Boolean> lock(String key, long waitTime, long expireTime, TimeUnit timeUnit) {
 		try {
-			RLock lock = redissonClient.getLock(LOCK_PREFIX + ":" + key);
+			RLock lock = redissonClient.getLock(LOCK_PREFIX + key);
 			return Optional.of(lock.tryLock(waitTime, expireTime, timeUnit));
 		} catch (InterruptedException e) {
 			log.warn("Redis tryLock InterruptedException - key: {}", key);
@@ -39,7 +39,7 @@ public class LockProvider {
 			RLock lock = redissonClient.getLock(LOCK_PREFIX + key);
 			lock.unlock();
 		} catch (IllegalMonitorStateException e) {
-			log.warn("IllegalMonitorStateException - key: {}", key);
+			log.warn("IllegalMonitorStateException - key: {}", LOCK_PREFIX + key);
 		}
 	}
 

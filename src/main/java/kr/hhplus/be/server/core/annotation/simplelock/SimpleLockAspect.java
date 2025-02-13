@@ -41,7 +41,7 @@ public class SimpleLockAspect {
 			return joinPoint.proceed();
 		} finally {
 			// lock이 true면 unlock 호출
-			if (lock.isPresent()) lockProvider.unlock(simpleLock.key());
+			if (lock.isPresent()) lockProvider.unlock(key);
 		}
 	}
 }
