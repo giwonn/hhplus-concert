@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.api.reservation.application;
 
+import kr.hhplus.be.server.api.reservation.application.event.ReservationCreatedEvent;
 import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
@@ -10,6 +11,7 @@ import kr.hhplus.be.server.api.reservation.exception.ReservationErrorCode;
 import kr.hhplus.be.server.core.exception.CustomException;
 import kr.hhplus.be.server.core.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class ReservationService {
 
 	private final ReservationRepository reservationRepository;
+	private final ApplicationEventPublisher applicationEventPublisher;
 
 	private final TimeProvider timeProvider;
 
@@ -44,8 +47,11 @@ public class ReservationService {
 		if (!duplicateReservations.isEmpty()) {
 			throw new CustomException(ReservationErrorCode.ALREADY_SEAT_RESERVATION);
 		}
-		Reservation reservation = Reservation.of(dto.seatId(), dto.userId(), dto.amount(), timeProvider.now());
-		return ReservationResult.from(reservationRepository.save(reservation));
+
+		Reservation reservation = reservationRepository.save(dto.to(timeProvider.now()));
+		applicationEventPublisher.publishEvent(ReservationCreatedEvent.from(reservation));
+
+		return ReservationResult.from(reservation);
 	}
 
 	@Transactional(readOnly = true)
