@@ -9,6 +9,10 @@ import lombok.NoArgsConstructor;
 import java.time.Instant;
 
 @Entity
+@Table(
+		name = "reservation",
+		indexes = { @Index(name = "idx_concert_schedule_id", columnList = "concert_schedule_id") }
+)
 @Getter
 @NoArgsConstructor
 public class Reservation {

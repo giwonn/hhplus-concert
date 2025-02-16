@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,9 +44,9 @@ public class ConcertServiceTest {
 		void 성공() {
 			// given
 			List<ConcertSchedule> schedules = List.of(
-					ConcertScheduleFixture.createMock(1L, 1L, LocalDate.parse("2025-01-01"),
+					ConcertScheduleFixture.createMock(1L, 1L, LocalDateTime.parse("2025-01-01T12:00"),
 							List.of(ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, false))),
-					ConcertScheduleFixture.createMock(3L, 1L, LocalDate.parse("2025-01-03"),
+					ConcertScheduleFixture.createMock(3L, 1L, LocalDateTime.parse("2025-01-03T12:00"),
 							List.of(ConcertSeatFixture.createMock(1L, 1L, 1, 1000L, true)))
 			);
 			when(concertScheduleRepository.findByConcertId(1L)).thenReturn(schedules);

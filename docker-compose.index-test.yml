@@ -1,0 +1,32 @@
+version: '3'
+services:
+
+  mysql1:
+    image: mysql:8.0
+    container_name: mysql1
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./mysql-backup.sql:/docker-entrypoint-initdb.d/mysql-backup.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=application
+      - MYSQL_PASSWORD=application
+      - MYSQL_DATABASE=hhplus
+
+  mysql2:
+    image: mysql:8.0
+    container_name: mysql2
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./mysql-backup.sql:/docker-entrypoint-initdb.d/mysql-backup.sql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=application
+      - MYSQL_PASSWORD=application
+      - MYSQL_DATABASE=hhplus
+networks:
+  default:
+    driver: bridge
+

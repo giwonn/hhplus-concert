@@ -17,7 +17,7 @@ public interface ConcertSeatRepository extends JpaRepository<ConcertSeat, Long> 
 
 	@Modifying(clearAutomatically = true)
 	@Query("UPDATE ConcertSeat cs SET cs.isReserved = false WHERE cs.id IN :ids")
-	void updateSeatReservableByIds(List<Long> ids);
+	void updateSeatReservableByIds(@Param("ids") List<Long> ids);
 
 	List<ConcertSeat> findByConcertScheduleIdAndIsReservedFalse(long concertScheduleId);
 

@@ -13,6 +13,7 @@
 ## 성능 개선 및 고도화 보고서
 ### [콘서트 예약 시스템에서의 동시성 문제 및 해결 방안](./docs/concurrency.md)
 ### [Redis를 이용한 성능 개선 보고서](./docs/performance_improvement_by_redis.md)
+### [인덱스를 이용한 성능 개선 보고서](./docs/db_index.md)
 
 ## 개념 정리
 ### [Cache](./docs/cache.md)
@@ -37,4 +38,12 @@ docker-compose up -d
 2. http://localhost:3000/login 접속 및 로그인 (ID: admin, PW: admin) // Grafana 로그인
 3. k6 Load Testing Results 대시보드 선택
 3. docker compose -f docker-compose.k6.yml run --rm k6 -- waiting-queue.js // 대기열 부하테스트 실행
+```
+
+### 인덱스 테스트 환경 세팅
+[sql 다운로드 링크](https://drive.google.com/file/d/1py594B4w0AlziW2AnSyEJN0egcrqyVcV/view?usp=sharing)
+```
+1. 다운로드한 sql파일 프로젝트 최상단으로 이동
+2. gzip -dk mysql-backup.sql.gz // 덤프 압축 해제
+3. docker compose -f docker-compose.index-test.yml up --build -d
 ```

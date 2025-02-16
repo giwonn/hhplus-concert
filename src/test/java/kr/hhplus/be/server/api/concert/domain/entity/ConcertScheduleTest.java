@@ -3,6 +3,7 @@ package kr.hhplus.be.server.api.concert.domain.entity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +19,7 @@ class ConcertScheduleTest {
 				ConcertSeatFixture.createMock(2L, 1L, 3, 1000L, true)
 		);
 
-		ConcertSchedule schedule = ConcertScheduleFixture.createMock(1L, 1L, LocalDate.parse("2025-01-01"), seats);
+		ConcertSchedule schedule = ConcertScheduleFixture.createMock(1L, 1L, LocalDateTime.parse("2025-01-01T12:00"), seats);
 
 		// when & then
 		assertThat(schedule.isAvailable()).isTrue();
@@ -33,7 +34,7 @@ class ConcertScheduleTest {
 				ConcertSeatFixture.createMock(2L, 1L, 3, 1000L, true)
 		);
 
-		ConcertSchedule schedule = ConcertScheduleFixture.createMock(1L, 1L, LocalDate.parse("2025-01-01"), seats);
+		ConcertSchedule schedule = ConcertScheduleFixture.createMock(1L, 1L, LocalDateTime.parse("2025-01-01T12:00"), seats);
 
 		// when & then
 		assertThat(schedule.isAvailable()).isFalse();
