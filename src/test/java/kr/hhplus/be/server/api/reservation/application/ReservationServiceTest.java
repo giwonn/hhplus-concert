@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.sql.Date;
 import java.time.Clock;
@@ -39,6 +40,9 @@ public class ReservationServiceTest {
 	private ReservationRepository reservationRepository;
 
 	@Mock
+	ApplicationEventPublisher applicationEventPublisher;
+
+	@Mock
 	private TimeProvider timeProvider;
 
 	@BeforeEach
@@ -46,7 +50,7 @@ public class ReservationServiceTest {
 		Clock clock = Clock.fixed(Instant.parse("2024-01-01T12:00:00Z"), Clock.systemUTC().getZone());
 		timeProvider = new TimeProvider(clock);
 		reservationRepository = mock(ReservationRepository.class);
-		reservationService = new ReservationService(reservationRepository, timeProvider);
+		reservationService = new ReservationService(reservationRepository, applicationEventPublisher, timeProvider);
 	}
 
 	@Nested

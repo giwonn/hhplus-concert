@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS concert (
 CREATE TABLE IF NOT EXISTS concert_schedule (
   id bigint PRIMARY KEY AUTO_INCREMENT,
   concert_id bigint not null,
-  concert_date date not null
+  concert_date datetime not null
 );
 ALTER TABLE concert_schedule ADD CONSTRAINT uk_concert_id_date UNIQUE (concert_id, concert_date);
 

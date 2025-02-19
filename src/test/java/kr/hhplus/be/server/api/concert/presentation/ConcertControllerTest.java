@@ -10,6 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -29,7 +30,7 @@ class ConcertControllerTest extends BaseControllerTest {
 
 		@Test
 		void 성공() throws Exception {
-			ConcertScheduleResult result = new ConcertScheduleResult(1L, 1L, LocalDate.parse("2024-01-01"));
+			ConcertScheduleResult result = new ConcertScheduleResult(1L, 1L, LocalDateTime.parse("2024-01-01T12:00:00"));
 			when(concertService.getReservableSchedules(anyLong())).thenReturn(List.of(result));
 
 			mockMvc.perform(get("/concerts/{concertId}/available-dates", 1)
