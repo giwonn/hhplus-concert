@@ -51,6 +51,10 @@ dependencies {
 	implementation("org.redisson:redisson-spring-boot-starter:3.43.0")
 	testImplementation("com.redis.testcontainers:testcontainers-redis:1.6.4")
 
+	// Kafka
+	implementation("org.springframework.kafka:spring-kafka")
+	testImplementation("org.testcontainers:kafka")
+
     // Test
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
