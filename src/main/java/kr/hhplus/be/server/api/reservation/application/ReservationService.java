@@ -69,6 +69,11 @@ public class ReservationService {
 
 		reservation.confirm(dto.transactionAt());
 
-		return ReservationResult.from(reservationRepository.save(reservation));
+		applicationEventPublisher.publishEvent(
+				ReservationConfirmedEvent.of(UUID.randomUUID().toString(), reservation)
+		);
+
+		return ReservationResult.from(reservation);
 	}
+
 }

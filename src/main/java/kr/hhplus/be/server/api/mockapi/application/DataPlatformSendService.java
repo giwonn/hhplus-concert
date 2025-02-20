@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.mockapi.application;
 
-import kr.hhplus.be.server.api.mockapi.application.port.in.ReservationCreatedDto;
+import kr.hhplus.be.server.api.mockapi.application.port.in.ReservationConfirmedDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataPlatformSendService {
 
-	public void sendReservation(ReservationCreatedDto dto) {
+	public void sendReservation(ReservationConfirmedDto dto) {
 		log.info("Sending Reservation to DataPlatform");
 	}
 }

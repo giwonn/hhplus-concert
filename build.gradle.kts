@@ -59,6 +59,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.boot:spring-boot-testcontainers")
 	testImplementation("org.testcontainers:junit-jupiter")
+	testImplementation("org.awaitility:awaitility:4.2.2")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

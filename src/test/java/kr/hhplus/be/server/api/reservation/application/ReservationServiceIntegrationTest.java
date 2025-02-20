@@ -1,5 +1,6 @@
 package kr.hhplus.be.server.api.reservation.application;
 
+import kr.hhplus.be.server.api.mockapi.application.DataPlatformSendService;
 import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
@@ -14,13 +15,19 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import java.sql.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @Import(FixedClockBean.class)
 class ReservationServiceIntegrationTest extends BaseIntegrationTest {
@@ -31,8 +38,13 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 	@Autowired
 	ReservationRepository reservationRepository;
 
+
 	@Autowired
 	TimeProvider timeProvider;
+
+	@MockitoSpyBean
+	DataPlatformSendService dataPlatformSendService;
+
 
 	@Nested
 	class 예약_만료_처리 {
@@ -134,7 +146,25 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 				assertThat(sut.paidAt()).isEqualTo(reservation.getPaidAt());
 			});
 		}
-	}
 
+		@Test
+		void 데이터플랫폼_발송_성공() {
+			// given
+			reservationRepository.save(Reservation.of(1L, 1L, 1000, Instant.now()));
+			ConfirmReservationDto dto = new ConfirmReservationDto(1L, timeProvider.now());
+
+			// when
+			ReservationResult sut = reservationService.confirmReservation(dto);
+
+			// then
+			assertThat(sut.status()).isEqualTo(ReservationStatus.CONFIRMED);
+			await()
+					.pollInterval(Duration.ofMillis(500))
+					.atMost(5, TimeUnit.SECONDS)
+					.untilAsserted(() -> {
+						verify(dataPlatformSendService, times(1)).sendReservation(any());
+					});
+		}
+	}
 
 }
