@@ -4,6 +4,7 @@ import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeat;
 import kr.hhplus.be.server.api.concert.domain.entity.ConcertSeatFixture;
 import kr.hhplus.be.server.api.concert.domain.repository.ConcertSeatRepository;
 import kr.hhplus.be.server.api.concert.exception.ConcertErrorCode;
+import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReservationPaymentDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationPaymentResult;
@@ -118,7 +119,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			// given
 			ConcertSeat concertSeat = ConcertSeatFixture.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 4L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 4L, 1000L);
 
 			// when
 			ReservationResult reservation = reservationFacade.reserve(dto);
@@ -135,7 +136,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			// given
 			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, true);
 			concertSeatRepository.save(concertSeat);
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
@@ -149,7 +150,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			concertSeatRepository.save(concertSeat);
 			Reservation testReservation = ReservationFixture.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))

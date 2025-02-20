@@ -48,7 +48,7 @@ class ReservationFacadeConcurrencyTest extends BaseIntegrationTest {
 			int tryCount = 20;
 			for (long i = 1; i <= tryCount; i++) {
 				final long userId = i;
-				tasks.add(() -> reservationFacade.reserve(new ReserveSeatDto(1L, userId, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"))));
+				tasks.add(() -> reservationFacade.reserve(new CreateReservationDto(1L, userId, 1000L)));
 			}
 
 			ConcurrencyTestUtil.Result result = ConcurrencyTestUtil.run(tasks);

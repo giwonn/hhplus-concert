@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.api.reservation.application;
 
 import kr.hhplus.be.server.api.mockapi.application.DataPlatformSendService;
+import kr.hhplus.be.server.api.mockapi.application.port.in.ReservationConfirmedDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
@@ -69,7 +70,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 			List<ReservationResult> sut = reservationService.expireReservations();
 
 			// then
-			List<Reservation> expiredReservations = reservationRepository.findByStatusWithLock(ReservationStatus.EXPIRED);
+			List<Reservation> expiredReservations = reservationRepository.findByStatus(ReservationStatus.EXPIRED);
 			assertAll(() -> {
 				assertThat(expiredReservations).hasSize(1);
 				assertThat(sut).hasSize(1);
@@ -169,7 +170,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 					.pollInterval(Duration.ofMillis(500))
 					.atMost(5, TimeUnit.SECONDS)
 					.untilAsserted(() -> {
-						verify(dataPlatformSendService, times(1)).sendReservation(any());
+						verify(dataPlatformSendService, times(1)).sendReservation(any(ReservationConfirmedDto.class));
 						verify(reservationOutboxService, times(1)).updateOutboxPublished(any());
 					});
 

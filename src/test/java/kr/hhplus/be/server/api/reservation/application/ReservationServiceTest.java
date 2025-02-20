@@ -186,16 +186,6 @@ public class ReservationServiceTest {
 			);
 			when(reservationRepository.findById(anyLong())).thenReturn(Optional.of(reservation));
 
-			Reservation afterReservation = ReservationFixture.createMock(
-					1L,
-					1L,
-					1L,
-					1000L,
-					ReservationStatus.CONFIRMED,
-					timeProvider.now()
-			);
-			when(reservationRepository.save(any())).thenReturn(afterReservation);
-
 			ConfirmReservationDto dto = new ConfirmReservationDto(1L, timeProvider.now());
 
 			// when

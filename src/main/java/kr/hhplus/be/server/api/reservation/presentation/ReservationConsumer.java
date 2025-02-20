@@ -15,6 +15,12 @@ public class ReservationConsumer {
 
 	private final ReservationOutboxService reservationOutboxService;
 
+	@KafkaListener(id = "reservation-created-self-consume", topics = "reservation-created")
+	public void reservationCreated(ConsumerRecord<String, ReservationCreatedEvent> record) {
+		ReservationCreatedEvent event = record.value();
+		reservationOutboxService.updateOutboxPublished(event.requestId());
+	}
+
 	@KafkaListener(id = "reservation-confirmed-self-consume", topics = "reservation-confirmed")
 	public void reservationConfirmed(ConsumerRecord<String, ReservationConfirmedEvent> record) {
 		ReservationConfirmedEvent event = record.value();

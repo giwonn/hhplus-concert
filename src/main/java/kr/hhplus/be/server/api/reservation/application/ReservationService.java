@@ -50,7 +50,6 @@ public class ReservationService {
 		}
 
 		Reservation reservation = reservationRepository.save(dto.to(timeProvider.now()));
-		applicationEventPublisher.publishEvent(ReservationCreatedEvent.from(reservation));
 
 		return ReservationResult.from(reservation);
 	}

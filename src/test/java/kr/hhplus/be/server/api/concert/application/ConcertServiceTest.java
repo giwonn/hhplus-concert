@@ -58,7 +58,7 @@ public class ConcertServiceTest {
 			assertAll(() -> {
 				assertThat(sut).hasSize(1);
 				assertThat(sut.get(0).id()).isEqualTo(1L);
-				assertThat(sut.get(0).concertDate()).isEqualTo(LocalDate.parse("2025-01-01"));
+				assertThat(sut.get(0).concertDate()).isEqualTo("2025-01-01T12:00:00");
 			});
 		}
 	}

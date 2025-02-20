@@ -11,7 +11,7 @@ class KafkaTestcontainersConfiguration {
 	private static final ConfluentKafkaContainer KAFKA_CONTAINER;
 
 	static {
-		KAFKA_CONTAINER = new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:latest"));
+		KAFKA_CONTAINER = new ConfluentKafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.8.1"));
 		KAFKA_CONTAINER.start();
 
 		System.setProperty("spring.kafka.bootstrap-servers", KAFKA_CONTAINER.getBootstrapServers());

@@ -84,7 +84,7 @@ public class ReservationFacadeTest {
 			ConcertSeatResult concertSeatResult = new ConcertSeatResult(1L, 1L, 1, 1000L, true);
 			when(concertService.reserveSeat(anyLong())).thenReturn(concertSeatResult);
 
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 			ReservationResult reservationResult = new ReservationResult(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, Instant.now(), null);
 			when(reservationService.reserve(any(CreateReservationDto.class))).thenReturn(reservationResult);
 
