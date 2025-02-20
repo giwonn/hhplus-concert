@@ -6,6 +6,7 @@ import kr.hhplus.be.server.api.reservation.application.event.ReservationConfirme
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationOutbox;
 import kr.hhplus.be.server.api.reservation.domain.producer.ReservationProducer;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationOutboxRepository;
+import kr.hhplus.be.server.core.provider.TimeProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -19,6 +20,7 @@ public class ReservationConfirmedListener {
 	private final ObjectMapper objectMapper;
 
 	private final String topic = "reservation-confirmed";
+	private final TimeProvider timeProvider;
 
 	@TransactionalEventListener(phase = TransactionPhase.BEFORE_COMMIT)
 	void saveOutbox(ReservationConfirmedEvent event) throws JsonProcessingException {
@@ -26,7 +28,8 @@ public class ReservationConfirmedListener {
 				event.requestId(),
 				topic,
 				String.valueOf(event.concertSeatId()),
-				objectMapper.writeValueAsString(event)
+				objectMapper.writeValueAsString(event),
+				timeProvider.now()
 		);
 		reservationOutboxRepository.save(outboxEntity);
 	}

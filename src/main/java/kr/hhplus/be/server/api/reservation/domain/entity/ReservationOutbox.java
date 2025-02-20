@@ -3,15 +3,14 @@ package kr.hhplus.be.server.api.reservation.domain.entity;
 import jakarta.persistence.*;
 import kr.hhplus.be.server.core.enums.OutboxStatus;
 import lombok.Getter;
-import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
 
 @Table(
-	indexes = { @Index(name = "idx_status", columnList = "status") },
-	uniqueConstraints = { @UniqueConstraint(name = "uk_request_id", columnNames = "request_id") }
+	indexes = { @Index(name = "idx_reservation_outbox_status", columnList = "status") },
+	uniqueConstraints = { @UniqueConstraint(name = "uk_reservation_outbox_request_id", columnNames = "request_id") }
 )
 @Getter
 @EntityListeners(AuditingEntityListener.class)
@@ -22,7 +21,7 @@ public class ReservationOutbox {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = false)
 	private String requestId;
 
 	@Column(nullable = false)
@@ -38,7 +37,6 @@ public class ReservationOutbox {
 	@Column(nullable = false)
 	private OutboxStatus status;
 
-	@CreatedDate
 	@Column(nullable = false, updatable = false)
 	private Instant createdAt;
 
@@ -47,29 +45,24 @@ public class ReservationOutbox {
 
 	public ReservationOutbox() {}
 
-	private ReservationOutbox(String requestId, String topic, String partitionKey, String message, OutboxStatus status) {
+	private ReservationOutbox(String requestId, String topic, String partitionKey, String message, OutboxStatus status, Instant createdAt) {
 		this.requestId = requestId;
 		this.topic = topic;
 		this.partitionKey = partitionKey;
 		this.message = message;
 		this.status = status;
+		this.createdAt = createdAt;
 	}
 
-	public static ReservationOutbox of(String requestId, String topic, String partitionKey, String message) {
+	public static ReservationOutbox of(String requestId, String topic, String partitionKey, String message, Instant createdAt) {
 		return new ReservationOutbox(
 				requestId,
 				topic,
 				partitionKey,
 				message,
-				OutboxStatus.PENDING
+				OutboxStatus.PENDING,
+				createdAt
 		);
-	}
-
-	@PrePersist
-	private void onCreate() {
-		if (createdAt == null) {
-			createdAt = Instant.now();
-		}
 	}
 
 	public void published() {
