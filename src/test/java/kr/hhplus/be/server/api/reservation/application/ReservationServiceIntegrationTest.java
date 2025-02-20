@@ -5,11 +5,14 @@ import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservatio
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
+import kr.hhplus.be.server.api.reservation.domain.entity.ReservationOutbox;
+import kr.hhplus.be.server.api.reservation.domain.repository.ReservationOutboxRepository;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
 import kr.hhplus.be.server.base.BaseIntegrationTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
+import kr.hhplus.be.server.core.enums.OutboxStatus;
 import kr.hhplus.be.server.core.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,6 +41,8 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 	@Autowired
 	ReservationRepository reservationRepository;
 
+	@Autowired
+	ReservationOutboxRepository reservationOutboxRepository;
 
 	@Autowired
 	TimeProvider timeProvider;
@@ -45,6 +50,8 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 	@MockitoSpyBean
 	DataPlatformSendService dataPlatformSendService;
 
+	@MockitoSpyBean
+	ReservationOutboxService reservationOutboxService;
 
 	@Nested
 	class 예약_만료_처리 {
@@ -163,7 +170,12 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 					.atMost(5, TimeUnit.SECONDS)
 					.untilAsserted(() -> {
 						verify(dataPlatformSendService, times(1)).sendReservation(any());
+						verify(reservationOutboxService, times(1)).updateOutboxPublished(any());
 					});
+
+			Optional<ReservationOutbox> outbox = reservationOutboxRepository.findById(1L);
+			assertThat(outbox).isNotNull();
+			assertThat(outbox.get().getStatus()).isEqualTo(OutboxStatus.PUBLISHED);
 		}
 	}
 

@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS concert;
 DROP TABLE IF EXISTS concert_schedule;
 DROP TABLE IF EXISTS reservation;
 DROP TABLE IF EXISTS concert_seat;
+DROP TABLE IF EXISTS reservation_outbox;
 SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE IF NOT EXISTS user (
@@ -54,3 +55,16 @@ CREATE TABLE IF NOT EXISTS reservation (
   version bigint not null default 0
 );
 ALTER TABLE reservation ADD INDEX idx_concert_schedule_id (concert_seat_id);
+
+CREATE TABLE IF NOT EXISTS reservation_outbox (
+  id bigint PRIMARY KEY AUTO_INCREMENT,
+  request_id varchar(255) not null,
+  topic varchar(100) not null,
+  partition_key varchar(100) not null,
+  message TEXT not null,
+  status varchar(30) not null,
+  created_at timestamp not null,
+  updated_at timestamp
+);
+ALTER TABLE reservation_outbox ADD CONSTRAINT uk_reservation_outbox_request_id UNIQUE (request_id);
+ALTER TABLE reservation_outbox ADD INDEX idx_reservation_outbox_status (status);
