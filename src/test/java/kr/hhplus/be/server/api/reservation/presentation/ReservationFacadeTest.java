@@ -26,6 +26,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Date;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -83,7 +84,7 @@ public class ReservationFacadeTest {
 			ConcertSeatResult concertSeatResult = new ConcertSeatResult(1L, 1L, 1, 1000L, true);
 			when(concertService.reserveSeat(anyLong())).thenReturn(concertSeatResult);
 
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
 			ReservationResult reservationResult = new ReservationResult(1L, 1L, 1L, 1000L, ReservationStatus.WAITING, Instant.now(), null);
 			when(reservationService.reserve(any(CreateReservationDto.class))).thenReturn(reservationResult);
 

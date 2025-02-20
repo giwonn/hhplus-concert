@@ -23,7 +23,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @Import(FixedClockBean.class)
-@Transactional
 class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
@@ -66,7 +65,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 성공() {
 			// given
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-01-01"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 
 			// when
 			ReservationResult sut = reservationService.reserve(dto);

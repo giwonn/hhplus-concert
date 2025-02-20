@@ -62,7 +62,7 @@ public class ReservationControllerTest extends BaseControllerTest {
 			when(reservationFacade.reserve(any())).thenReturn(result);
 
 			ConcertReservationRequest request = new ConcertReservationRequest(
-					1L, 1L, Date.valueOf("2024-01-01"));
+					1L, 1L, 1000L);
 
 			// when & then
 			mockMvc.perform(post("/reservation/concerts")
@@ -82,7 +82,7 @@ public class ReservationControllerTest extends BaseControllerTest {
 			when(reservationFacade.reserve(any())).thenReturn(result);
 
 			ConcertReservationRequest request = new ConcertReservationRequest(
-					1L, 50L, Date.valueOf("2024-01-01"));
+					1L, 50L, 1000L);
 
 			// when & then
 			mockMvc.perform(post("/reservation/concerts")
@@ -98,7 +98,7 @@ public class ReservationControllerTest extends BaseControllerTest {
 		void 좌석번호가_0일_경우_요청_실패() throws Exception {
 			// given
 			ConcertReservationRequest request = new ConcertReservationRequest(
-					1L, 0L, Date.valueOf("2024-01-01"));
+					1L, 0L, 1000L);
 
 			// when & then
 			mockMvc.perform(post("/reservation/concerts")
@@ -113,7 +113,7 @@ public class ReservationControllerTest extends BaseControllerTest {
 		void 좌석번호가_51일_경우_요청_실패() throws Exception {
 			// given
 			ConcertReservationRequest request = new ConcertReservationRequest(
-					1L, 51L, Date.valueOf("2024-01-01"));
+					1L, 51L,1000L);
 
 			// when & then
 			mockMvc.perform(post("/reservation/concerts")

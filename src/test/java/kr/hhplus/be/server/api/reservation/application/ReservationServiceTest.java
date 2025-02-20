@@ -4,6 +4,7 @@ import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservatio
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
+import kr.hhplus.be.server.api.reservation.domain.repository.ReservationOutboxRepository;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
@@ -97,7 +98,7 @@ public class ReservationServiceTest {
 
 			when(reservationRepository.findByConcertSeatIdAndStatus(reservation.getId(), ReservationStatus.WAITING)).thenReturn(List.of());
 			when(reservationRepository.save(any(Reservation.class))).thenReturn(reservation);
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 
 			// when
 			ReservationResult sut = reservationService.reserve(dto);
@@ -125,7 +126,7 @@ public class ReservationServiceTest {
 			);
 
 			when(reservationRepository.findByConcertSeatIdAndStatus(reservation.getId(), ReservationStatus.WAITING)).thenReturn(List.of(reservation));
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-10-01"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 
 			// when & then
 			assertThatThrownBy(() -> reservationService.reserve(dto))

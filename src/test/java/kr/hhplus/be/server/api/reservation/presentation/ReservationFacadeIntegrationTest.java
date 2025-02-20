@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -117,7 +118,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			// given
 			ConcertSeat concertSeat = ConcertSeatFixture.create(3L, 1, 1000L, false);
 			concertSeatRepository.save(concertSeat);
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 4L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 4L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
 
 			// when
 			ReservationResult reservation = reservationFacade.reserve(dto);
@@ -134,7 +135,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			// given
 			ConcertSeat concertSeat = ConcertSeatFixture.create(1L, 2, 1000L, true);
 			concertSeatRepository.save(concertSeat);
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))
@@ -148,7 +149,7 @@ class ReservationFacadeIntegrationTest extends BaseIntegrationTest {
 			concertSeatRepository.save(concertSeat);
 			Reservation testReservation = ReservationFixture.create(1L, 1, 1000L, ReservationStatus.WAITING, timeProvider.now(), null);
 			reservationRepository.save(testReservation);
-			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, Date.valueOf("2024-10-01"));
+			ReserveSeatDto dto = new ReserveSeatDto(1L, 1L, 1000L, LocalDateTime.parse("2024-10-01T12:00:00"));
 
 			// when & then
 			assertThatThrownBy(() -> reservationFacade.reserve(dto))

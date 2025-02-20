@@ -51,7 +51,6 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 			concertService.unReserveSeats(concertSeatIds);
 
 			Optional<ConcertSeat> expiredReservation = concertSeatRepository.findById(2L);
-			System.out.println(expiredReservation.get().isReserved());
 			assertAll(() -> {
 				assertThat(expiredReservation).isPresent();
 				assertThat(expiredReservation.get().isReserved()).isFalse();

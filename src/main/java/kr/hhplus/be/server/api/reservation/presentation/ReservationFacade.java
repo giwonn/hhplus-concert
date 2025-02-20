@@ -40,7 +40,7 @@ public class ReservationFacade {
 			compensations.add(() -> concertService.unReserveSeat(concertSeat.id()));
 
 			CreateReservationDto reservationDto = new CreateReservationDto(
-					concertSeat.id(), dto.userId(), concertSeat.amount(), dto.date());
+					concertSeat.id(), dto.userId(), concertSeat.amount());
 			return reservationService.reserve(reservationDto);
 		});
 	}

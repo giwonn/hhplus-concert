@@ -24,7 +24,7 @@ Content-Type: application/json
 {
   "seatId": 1,
   "userId": 1,
-  "date": "2024-01-01"
+  "amount": 1000
 }
 
 
@@ -48,5 +48,5 @@ Content-Type: application/json
 
 {
   "userId": 1,
-  "reservation": 1
+  "reservationId": 1
 }
