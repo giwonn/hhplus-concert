@@ -20,6 +20,21 @@ spring:
     properties:
       hibernate.timezone.default_storage: NORMALIZE_UTC
       hibernate.jdbc.time_zone: UTC
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: my-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.deserializer.value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
+      spring.json.trusted.packages: "*"
+    producer:
+      retries: 3
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 ---
 spring.config.activate.on-profile: local, test, load-test
@@ -29,13 +44,14 @@ spring:
     url: jdbc:mysql://localhost:3306/hhplus?characterEncoding=UTF-8&serverTimezone=UTC
     username: application
     password: application
+  sql:
+    init:
+      mode: always
   data:
     redis:
       host: localhost
       port: 6379
-  sql:
-    init:
-      mode: always
+
 
 queue:
   limit:
@@ -68,3 +84,6 @@ spring:
   data:
     redis:
       host: redis
+
+  kafka:
+    bootstrap-servers: kafka:9092

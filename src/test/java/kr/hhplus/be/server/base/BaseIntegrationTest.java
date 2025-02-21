@@ -1,6 +1,7 @@
 package kr.hhplus.be.server.base;
 
 import kr.hhplus.be.server.util.DatabaseCleaner;
+import kr.hhplus.be.server.util.KafkaCleaner;
 import org.junit.jupiter.api.BeforeEach;
 import org.redisson.api.RScript;
 import org.redisson.api.RedissonClient;
@@ -18,6 +19,8 @@ public abstract class BaseIntegrationTest {
 
 	@Autowired
 	RedissonClient redissonClient;
+	@Autowired
+	private KafkaCleaner kafkaCleaner;
 
 	@BeforeEach
 	final void baseSetUp() {
@@ -27,5 +30,6 @@ public abstract class BaseIntegrationTest {
 				"return redis.call('FLUSHALL')",
 				RScript.ReturnType.VALUE
 		);
+		kafkaCleaner.clear();
 	}
 }

@@ -1,6 +1,6 @@
 package kr.hhplus.be.server.api.reservation.application;
 
-import kr.hhplus.be.server.api.reservation.application.event.ReservationCreatedEvent;
+import kr.hhplus.be.server.api.reservation.application.event.ReservationConfirmedEvent;
 import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -49,7 +50,6 @@ public class ReservationService {
 		}
 
 		Reservation reservation = reservationRepository.save(dto.to(timeProvider.now()));
-		applicationEventPublisher.publishEvent(ReservationCreatedEvent.from(reservation));
 
 		return ReservationResult.from(reservation);
 	}
@@ -69,6 +69,11 @@ public class ReservationService {
 
 		reservation.confirm(dto.transactionAt());
 
-		return ReservationResult.from(reservationRepository.save(reservation));
+		applicationEventPublisher.publishEvent(
+				ReservationConfirmedEvent.of(UUID.randomUUID().toString(), reservation)
+		);
+
+		return ReservationResult.from(reservation);
 	}
+
 }

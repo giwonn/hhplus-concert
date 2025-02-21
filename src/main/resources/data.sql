@@ -1,14 +1,14 @@
 
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
-INSERT INTO user (point) VALUES (0);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
+INSERT INTO user (point) VALUES (10000);
 
 INSERT INTO concert (id) VALUES (null);
 

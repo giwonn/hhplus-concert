@@ -15,6 +15,8 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
+	List<Reservation> findByStatus(ReservationStatus status);
+
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	@Query("SELECT r FROM Reservation r WHERE r.status = :status")
 	List<Reservation> findByStatusWithLock(@Param("status") ReservationStatus status);

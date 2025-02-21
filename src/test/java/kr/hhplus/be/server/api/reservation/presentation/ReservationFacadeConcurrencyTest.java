@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 
 import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -47,7 +48,7 @@ class ReservationFacadeConcurrencyTest extends BaseIntegrationTest {
 			int tryCount = 20;
 			for (long i = 1; i <= tryCount; i++) {
 				final long userId = i;
-				tasks.add(() -> reservationFacade.reserve(new ReserveSeatDto(1L, userId, Date.valueOf("2024-10-01"))));
+				tasks.add(() -> reservationFacade.reserve(new CreateReservationDto(1L, userId, 1000L)));
 			}
 
 			ConcurrencyTestUtil.Result result = ConcurrencyTestUtil.run(tasks);

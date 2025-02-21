@@ -1,10 +1,11 @@
 package kr.hhplus.be.server.api.reservation.application.port.in;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public record ReserveSeatDto(
 		long seatId,
 		long userId,
-		Date date
+		long amount,
+		LocalDateTime date
 ) {
 }

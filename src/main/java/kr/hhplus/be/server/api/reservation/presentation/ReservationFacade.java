@@ -34,13 +34,13 @@ public class ReservationFacade {
 		concertService.unReserveSeats(seatIds);
 	}
 
-	public ReservationResult reserve(ReserveSeatDto dto) {
+	public ReservationResult reserve(CreateReservationDto dto) {
 		return compensationProvider.handle(compensations -> {
 			ConcertSeatResult concertSeat = concertService.reserveSeat(dto.seatId());
 			compensations.add(() -> concertService.unReserveSeat(concertSeat.id()));
 
 			CreateReservationDto reservationDto = new CreateReservationDto(
-					concertSeat.id(), dto.userId(), concertSeat.amount(), dto.date());
+					concertSeat.id(), dto.userId(), concertSeat.amount());
 			return reservationService.reserve(reservationDto);
 		});
 	}

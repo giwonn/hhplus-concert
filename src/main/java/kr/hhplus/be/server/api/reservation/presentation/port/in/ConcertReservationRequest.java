@@ -3,9 +3,8 @@ package kr.hhplus.be.server.api.reservation.presentation.port.in;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
-import kr.hhplus.be.server.api.reservation.application.port.in.ReserveSeatDto;
+import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 
-import java.util.Date;
 
 public record ConcertReservationRequest(
 		@NotNull
@@ -17,9 +16,9 @@ public record ConcertReservationRequest(
 		Long seatId,
 
 		@NotNull
-		Date date
+		Long amount
 ) {
-	public ReserveSeatDto toDto() {
-		return new ReserveSeatDto(seatId, userId, date);
+	public CreateReservationDto toDto() {
+		return new CreateReservationDto(seatId, userId, amount);
 	}
 }
