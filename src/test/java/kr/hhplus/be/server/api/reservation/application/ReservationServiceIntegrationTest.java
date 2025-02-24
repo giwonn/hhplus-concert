@@ -1,29 +1,39 @@
 package kr.hhplus.be.server.api.reservation.application;
 
+import kr.hhplus.be.server.api.mockapi.application.DataPlatformSendService;
+import kr.hhplus.be.server.api.mockapi.application.port.in.ReservationConfirmedDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.ConfirmReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.in.CreateReservationDto;
 import kr.hhplus.be.server.api.reservation.application.port.out.ReservationResult;
 import kr.hhplus.be.server.api.reservation.domain.entity.Reservation;
+import kr.hhplus.be.server.api.reservation.domain.entity.ReservationOutbox;
+import kr.hhplus.be.server.api.reservation.domain.repository.ReservationOutboxRepository;
 import kr.hhplus.be.server.api.reservation.domain.repository.ReservationRepository;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 import kr.hhplus.be.server.api.reservation.domain.entity.ReservationFixture;
 import kr.hhplus.be.server.base.BaseIntegrationTest;
 import kr.hhplus.be.server.bean.FixedClockBean;
+import kr.hhplus.be.server.core.enums.OutboxStatus;
 import kr.hhplus.be.server.core.provider.TimeProvider;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
-import java.sql.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @Import(FixedClockBean.class)
-@Transactional
 class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 
 	@Autowired
@@ -33,7 +43,16 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 	ReservationRepository reservationRepository;
 
 	@Autowired
+	ReservationOutboxRepository reservationOutboxRepository;
+
+	@Autowired
 	TimeProvider timeProvider;
+
+	@MockitoSpyBean
+	DataPlatformSendService dataPlatformSendService;
+
+	@MockitoSpyBean
+	ReservationOutboxService reservationOutboxService;
 
 	@Nested
 	class 예약_만료_처리 {
@@ -51,7 +70,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 			List<ReservationResult> sut = reservationService.expireReservations();
 
 			// then
-			List<Reservation> expiredReservations = reservationRepository.findByStatusWithLock(ReservationStatus.EXPIRED);
+			List<Reservation> expiredReservations = reservationRepository.findByStatus(ReservationStatus.EXPIRED);
 			assertAll(() -> {
 				assertThat(expiredReservations).hasSize(1);
 				assertThat(sut).hasSize(1);
@@ -66,7 +85,7 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 		@Test
 		void 성공() {
 			// given
-			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L, Date.valueOf("2024-01-01"));
+			CreateReservationDto dto = new CreateReservationDto(1L, 1L, 1000L);
 
 			// when
 			ReservationResult sut = reservationService.reserve(dto);
@@ -135,7 +154,30 @@ class ReservationServiceIntegrationTest extends BaseIntegrationTest {
 				assertThat(sut.paidAt()).isEqualTo(reservation.getPaidAt());
 			});
 		}
-	}
 
+		@Test
+		void 데이터플랫폼_발송_성공() {
+			// given
+			reservationRepository.save(Reservation.of(1L, 1L, 1000, Instant.now()));
+			ConfirmReservationDto dto = new ConfirmReservationDto(1L, timeProvider.now());
+
+			// when
+			ReservationResult sut = reservationService.confirmReservation(dto);
+
+			// then
+			assertThat(sut.status()).isEqualTo(ReservationStatus.CONFIRMED);
+			await()
+					.pollInterval(Duration.ofMillis(500))
+					.atMost(5, TimeUnit.SECONDS)
+					.untilAsserted(() -> {
+						verify(dataPlatformSendService, times(1)).sendReservation(any(ReservationConfirmedDto.class));
+						verify(reservationOutboxService, times(1)).updateOutboxPublished(any());
+					});
+
+			Optional<ReservationOutbox> outbox = reservationOutboxRepository.findById(1L);
+			assertThat(outbox).isNotNull();
+			assertThat(outbox.get().getStatus()).isEqualTo(OutboxStatus.PUBLISHED);
+		}
+	}
 
 }

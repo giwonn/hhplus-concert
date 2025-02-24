@@ -51,7 +51,6 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 			concertService.unReserveSeats(concertSeatIds);
 
 			Optional<ConcertSeat> expiredReservation = concertSeatRepository.findById(2L);
-			System.out.println(expiredReservation.get().isReserved());
 			assertAll(() -> {
 				assertThat(expiredReservation).isPresent();
 				assertThat(expiredReservation.get().isReserved()).isFalse();
@@ -83,7 +82,7 @@ class ConcertServiceIntegrationTest extends BaseIntegrationTest {
 			// then
 			assertAll(() -> {
 				assertThat(sut.get(0).id()).isEqualTo(1L);
-				assertThat(sut.get(0).concertDate()).isEqualTo("2025-01-01");
+				assertThat(sut.get(0).concertDate()).isEqualTo("2025-01-01T12:00:00");
 			});
 		}
 	}

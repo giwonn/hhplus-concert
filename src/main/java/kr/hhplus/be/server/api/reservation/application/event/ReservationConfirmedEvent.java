@@ -5,7 +5,7 @@ import kr.hhplus.be.server.api.reservation.domain.entity.ReservationStatus;
 
 import java.time.Instant;
 
-public record ReservationCreatedEvent(
+public record ReservationConfirmedEvent(
 		String requestId,
 		long reservationId,
 		long concertSeatId,
@@ -16,8 +16,8 @@ public record ReservationCreatedEvent(
 		Instant paidAt
 ) {
 
-	public static ReservationCreatedEvent of(String requestId, Reservation reservation) {
-		return new ReservationCreatedEvent(
+	public static ReservationConfirmedEvent of(String requestId, Reservation reservation) {
+		return new ReservationConfirmedEvent(
 				requestId,
 				reservation.getId(),
 				reservation.getConcertSeatId(),
