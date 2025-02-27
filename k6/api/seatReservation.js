@@ -1,15 +1,15 @@
 import { callApi } from './callApi.js';
 
-export const seatReservation = async (userId, token) => {
+export const seatReservation = async (userId, seatId, amount, token) => {
   const headers = {
     "X-Waiting-Token": JSON.stringify(token)
   };
   const path = "/reservation/concerts";
   const body = {
-    seatId: Math.floor(Math.random() * 20) + 1,
     userId,
-    date: "2025-01-01"
+    seatId,
+    amount,
   };
 
-  return await callApi({method: "POST", headers, path, body })
+  return await callApi({method: "POST", headers, path, body, tag: '좌석 선점' })
 }
