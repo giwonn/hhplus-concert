@@ -6,11 +6,9 @@ import kr.hhplus.be.server.api.concert.presentation.port.out.AvailableConcertSch
 import kr.hhplus.be.server.api.concert.presentation.port.out.AvailableConcertSeatsResponse;
 import kr.hhplus.be.server.api.concert.application.port.out.ConcertSeatResult;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RestController

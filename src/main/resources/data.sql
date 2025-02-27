@@ -1,14 +1,14 @@
 
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
-INSERT INTO user (point) VALUES (10000);
+
+INSERT INTO user (point)
+WITH RECURSIVE cnt(n) AS (
+  SELECT 1
+  UNION ALL
+  SELECT n + 1 FROM cnt WHERE n < 50
+)
+SELECT 10000 FROM cnt;
+
+
 
 INSERT INTO concert (id) VALUES (null);
 

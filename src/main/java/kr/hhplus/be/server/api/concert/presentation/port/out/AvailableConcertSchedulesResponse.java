@@ -14,13 +14,14 @@ public record AvailableConcertSchedulesResponse(
 	public static AvailableConcertSchedulesResponse from(List<ConcertScheduleResult> result) {
 		return new AvailableConcertSchedulesResponse(
 				result.stream()
-						.map(schedule -> new Schedule(schedule.concertId(), schedule.concertDate()))
+						.map(schedule -> new Schedule(schedule.concertId(), schedule.id(), schedule.concertDate()))
 						.toList()
 		);
 	}
 
 	public record Schedule(
 			long concertId,
+			long concertScheduleId,
 			LocalDateTime concertDate
 	) {}
 }

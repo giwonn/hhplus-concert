@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotNull;
 
 public record ReservationPaymentRequest(
 		@NotNull
-		Long userId,
+		long userId,
 
 		@NotNull
 		long reservationId
