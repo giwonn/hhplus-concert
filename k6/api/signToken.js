@@ -6,7 +6,8 @@ export const signToken = (userId) => {
   const params = {
     headers: {
       "Content-Type": "application/json",
-    }
+    },
+    tags: { name: `POST /queue/tokens`}
   };
   const response = http.post(url, payload, params);
   return JSON.parse(response.body);
