@@ -14,6 +14,7 @@
 ### [콘서트 예약 시스템에서의 동시성 문제 및 해결 방안](./docs/concurrency.md)
 ### [Redis를 이용한 성능 개선 보고서](./docs/performance_improvement_by_redis.md)
 ### [인덱스를 이용한 성능 개선 보고서](./docs/db_index.md)
+### [부하 테스트 및 성능 병목 개선 보고서](./docs/failure-troubleshooting.md)
 
 ## 개념 정리
 ### [Cache](./docs/cache.md)
